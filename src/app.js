@@ -3,8 +3,11 @@ const express = require('express')
 const morgan = require('morgan')
 const {default: helmet} = require('helmet')
 const compression = require('compression')
-const mysql = require('mysql')
+const bodyParser = require('body-parser')
 const app = express();
+
+require("./auth/passport")
+require("./models/user.model")
 
 // init middlewares
 app.use(morgan("dev"))
@@ -14,12 +17,13 @@ app.use(express.json())
 app.use(express.urlencoded({
   extended: true
 }))
+app.use(bodyParser.json())
 
-// init datbase
-require('./database/init.mysql')
+//
+require('./database/index')
 
 // init routes
-app.use('', require('./routes/auth.route'))
+app.use('', require('./routes/api'))
 
 app.use((error , req, res, next) => {
     const statusCode = error.status || 500
