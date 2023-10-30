@@ -2,10 +2,11 @@
 const User = require("../models/user.model")
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
-const { BadRequestError } = require("../core/error.response")
+const { BadRequestError, AuthFailureError } = require("../core/error.response")
 const { getInfoData } = require("../utils")
 const KeyTokenService = require("./keyToken.service")
 const { createTokenPair } = require("../auth/authUtils")
+const { findUserByUsername } = require("./user.service")
 
 class AccessService {
     static register = async ({username, password, gmail}) => {
@@ -59,6 +60,37 @@ class AccessService {
             code: 200,
             metadata: null
         }
+    }
+
+    static login = async ({username, password, refreshToken = null}) => {
+        const foundUser = await findUserByUsername(username) 
+        if (!foundUser) {
+            throw new BadRequestError("Username doesn't exist!")
+        }
+
+        const match = bcrypt.compare(password, foundUser.password)
+        if (!match) throw new AuthFailureError('Authentication error!')
+
+        const privateKey = crypto.randomBytes(64).toString('hex')
+        const publicKey = crypto.randomBytes(64).toString('hex')
+
+        const {user_id: userId} = foundUser
+        const tokens = await createTokenPair({userId, username}, publicKey, privateKey)
+
+        await KeyTokenService.createKeyToken({
+            refreshToken: tokens.refreshToken,
+            privateKey, publicKey, userId
+        })
+
+        return {
+            user: getInfoData({fields: ['user_id', 'username'], object: foundUser}),
+            tokens
+        }
+    }
+
+    static logout = async (keyStore) => {
+        const delKey = await KeyTokenService.deleteKeyById(keyStore.user_id)
+        return delKey
     }
 }
 
