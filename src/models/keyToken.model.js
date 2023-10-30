@@ -1,7 +1,8 @@
 'use strict'
 
 const { DataTypes } = require("sequelize");
-const sequelize = require("../database/index")
+const sequelize = require("../database/index");
+const User = require("./user.model");
 
 const Token = sequelize.define('token', {
     privateKey: {
@@ -32,5 +33,6 @@ const Token = sequelize.define('token', {
         allowNull: false
     }
 })
+
 
 module.exports = Token

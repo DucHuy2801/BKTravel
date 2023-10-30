@@ -37,12 +37,12 @@ class KeyTokenService {
     }
 
     static removeKeyById = async (id) => {
-       return await Token.destroy(id);
+       return await Token.destroy({where: {id}});
     }
     
-      static deleteKeyById = async (userId) => {
-        return await Token.destroy(userId);
-      }
+    static deleteKeyById = async (userId) => {
+        return await Token.destroy({where: {userId}});
+    }
 }
 
 module.exports = KeyTokenService;
