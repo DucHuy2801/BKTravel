@@ -1,7 +1,8 @@
-const { DataTypes } = require("sequelize")
-const sequelize = require("../database/index")
+const { DataTypes } = require("sequelize");
+const sequelize = require("../database/index");
+const Token =require("./keyToken.model")
 
-const User = sequelize.define("User", {
+const User = sequelize.define('user', {
     user_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -15,13 +16,6 @@ const User = sequelize.define("User", {
     password: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-            isLongEnough: function(value) {
-                if (value.length < 6) {
-                    throw new Error("Password is weak, invite to enter other password!")
-                }
-            }
-        }
     },
     fullname: {
         type: DataTypes.STRING,
@@ -58,5 +52,7 @@ const User = sequelize.define("User", {
         defaultValue: 3
     },
 })
+
+User.hasOne(Token, {foreignKey: 'user_id'})
 
 module.exports = User;
