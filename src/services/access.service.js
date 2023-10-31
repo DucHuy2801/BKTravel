@@ -1,11 +1,11 @@
 'use strict'
 const User = require("../models/user.model")
 const bcrypt = require('bcrypt')
-const crypto = require('crypto')
+const jwt = require("jsonwebtoken")
+
 const { BadRequestError, AuthFailureError } = require("../core/error.response")
 const { getInfoData } = require("../utils")
 const KeyTokenService = require("./keyToken.service")
-const { createTokenPair } = require("../auth/authUtils")
 const { findUserByUsername } = require("./user.service")
 
 class AccessService {
@@ -31,23 +31,6 @@ class AccessService {
             throw new BadRequestError('Error: Cannot register user at the moment')
         })
         if (savedUser) {
-            const privateKey = crypto.randomBytes(64).toString('hex');
-            const publicKey = crypto.randomBytes(64).toString('hex');
-
-            const keyStore = await KeyTokenService.createKeyToken({
-                user_id: savedUser.user_id,
-                publicKey,
-                privateKey
-            })
-            if (!keyStore) {
-                return {
-                    code: '500',
-                    message: 'keyStore errors'
-                }
-            }
-
-            const tokens = await createTokenPair({user_id: savedUser.user_id, username}, publicKey, privateKey)
-            console.log(`Creating token successfully::`, tokens)
             return {
                 code: 201,
                 metadata: {
@@ -55,7 +38,6 @@ class AccessService {
                 }
             }
         }
-
         return {
             code: 200,
             metadata: null
@@ -71,21 +53,14 @@ class AccessService {
         const match = bcrypt.compare(password, foundUser.password)
         if (!match) throw new AuthFailureError('Authentication error!')
 
-        const privateKey = crypto.randomBytes(64).toString('hex')
-        const publicKey = crypto.randomBytes(64).toString('hex')
-
-        const {user_id: userId} = foundUser
-        const tokens = await createTokenPair({userId, username}, publicKey, privateKey)
-
-        await KeyTokenService.createKeyToken({
-            refreshToken: tokens.refreshToken,
-            privateKey, publicKey, userId
-        })
-
-        return {
-            user: getInfoData({fields: ['user_id', 'username'], object: foundUser}),
-            tokens
-        }
+       const jwtToken = jwt.sign(
+            {use_id: foundUser.use_id, username: foundUser.username},
+            process.env.JWT_SECRET
+       )
+       return {
+            code : 200,
+            token: jwtToken
+       }
     }
 
     static logout = async (keyStore) => {
