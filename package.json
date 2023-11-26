@@ -21,12 +21,17 @@
     "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
+    "moment-timezone": "^0.5.43",
     "morgan": "^1.10.0",
+    "multiparty": "^4.2.3",
     "mysql": "^2.18.1",
     "mysql2": "^3.6.2",
+    "nodemailer": "^6.9.7",
     "nodemon": "^3.0.1",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
-    "sequelize": "^6.33.0"
+    "sequelize": "^6.33.0",
+    "socket.io": "^4.7.2",
+    "uuid": "^9.0.1"
   }
 }
