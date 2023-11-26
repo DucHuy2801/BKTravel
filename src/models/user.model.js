@@ -1,6 +1,11 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/index");
-const Token =require("./keyToken.model")
+
+const role_user = {
+    ADMIN: 'admin',
+    GUIDER: 'guider',
+    CUSTOMER: 'customer'
+}
 
 const User = sequelize.define('user', {
     user_id: {
@@ -8,16 +13,15 @@ const User = sequelize.define('user', {
         primaryKey: true,
         autoIncrement: true
     },
-    username: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-    },
     password: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    fullname: {
+    lastname: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    firstname: {
         type: DataTypes.STRING,
         allowNull: true,
     },
@@ -36,7 +40,7 @@ const User = sequelize.define('user', {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    phone: {
+    phone_number: {
         type: DataTypes.STRING,
         allowNull: true,
         validate: {
@@ -47,12 +51,10 @@ const User = sequelize.define('user', {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    role_id: {
-        type: DataTypes.INTEGER,
-        defaultValue: 3
-    },
+    role_user: {
+        type: DataTypes.ENUM(role_user.ADMIN, role_user.GUIDER, role_user.CUSTOMER),
+        allowNull: false
+    }
 })
-
-User.hasOne(Token, {foreignKey: 'user_id'})
 
 module.exports = User;
