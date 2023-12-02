@@ -53,12 +53,12 @@ class AccessService {
         }
 
         const match = bcrypt.compare(password, foundUser.password)
-        if (!match) throw new AuthFailureError('Authentication error!')
-
-       const jwtToken = jwt.sign(
-            {use_id: foundUser.use_id, gmail: foundUser.gmail, role_user: foundUser.role_user},
-            process.env.JWT_SECRET
-       )
+        if (match) throw new AuthFailureError('Authentication error!')
+        
+        const jwtToken = jwt.sign(
+                {use_id: foundUser.use_id, gmail: foundUser.gmail, role_user: foundUser.role_user},
+                process.env.JWT_SECRET
+        )
        return {
             code : 200,
             token: jwtToken
