@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const {default: helmet} = require('helmet')
 const compression = require('compression')
 const bodyParser = require('body-parser')
+const cors = require("cors")
 const app = express();
 
 require("./auth/passport")
@@ -21,6 +22,9 @@ app.use(bodyParser.json())
 
 //
 require('./database/index')
+
+app.use(cors({ origin: 'http://localhost:3000' }));
+
 
 // init routes
 app.use('', require('./routes/api'))
