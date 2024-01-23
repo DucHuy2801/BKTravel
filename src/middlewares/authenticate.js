@@ -6,7 +6,6 @@ const HEADER = {
     AUTHORIZATION: 'authorization' 
 }
 
-
 const authenticate = (req, res, next) => {
     try {
         const token = req.headers[HEADER.AUTHORIZATION]
