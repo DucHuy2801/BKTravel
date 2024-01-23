@@ -24,6 +24,13 @@ const sendMail = (email, url, expiresIn) => {
                 <p style="font-weight: 700;">Xin chào!</p>
                 <p style="font-size:14px;">Gần đây đã có người yêu cầu đặt lại mật khẩu cho tài khoản của bạn</p>
                 <div style="text-align:center; margin-top:2rem">
+                    <a href="${url}"
+                        style="background-color: black; padding: 0.5rem 1rem; border-radius: 0.3rem; text-decoration: none; font-weight: 300; color:beige">Đặt
+                        lại
+                        mật
+                        khẩu</a> 
+                </div>
+                <div style="text-align:center; margin-top:2rem">
                     <a>Code: ${code}</a>
                 </div>
                 <p>Mã này sẽ hết hạn sau ${expiresIn} phút</p>
