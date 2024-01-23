@@ -5,21 +5,9 @@ const { BadRequestError } = require("../core/error.response")
 const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken")
 const { findUserByEmail } = require("../services/user.service")
-const sendMail = require("../utils/sendMail")
 const authService = require("../services/auth.service")
 const querystring = require("querystring")
-
-const createAccessToken = (user, expiresIn = '30m') => {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: expiresIn
-    })
-}
-
-const createRefreshToken = (user, expiresIn = '7d') => {
-    return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
-        expiresIn: expiresIn
-    })
-}
+const { createAccessToken, createRefreshToken } = require("../services/auth.service")
 
 const redirectURI = "auth/google";
 
@@ -84,30 +72,6 @@ class AuthController {
         } catch (error) {
             return res.status(500).json({ status: 'Fail', message: error.message })
         }
-    }
-
-    // ...continue
-    forgotPassword = async (req, res, next) => {
-       try {
-            const { email } = req.body;
-            const user = await User.findOne({ where: { email }})
-            if (!user) {
-                return res.status(404).json({ status: 'Fail', message: "Gmail is not used by account!" })
-            }
-            const accessToken = createAccessToken({id: user.id, type_user: "customer"}, '30m')
-
-            const url = `${process.env.CLIENT_URL}/resetpassword/${accessToken}`
-            const fullname = user.fullname
-            console.log(`email`, email)
-
-            sendMail(email, '30m')
-            return res.status(200).json({
-				status: 'Success',
-				message: 'Send mail, please check to your gmail!',
-			})
-       } catch (error) {
-            return res.status(500).json({ status: 'Faile', message: error.message })
-       } 
     }
 
     // refresh token
