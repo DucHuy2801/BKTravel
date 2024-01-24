@@ -7,17 +7,14 @@ const Tour = require("./tour.model")
 const TourDetail = sequelize.define("tour_detail", {
     tour_detail_id: {
         type: DataTypes.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },
     name: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    type: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    image: {
+    cover_image: {
         type: DataTypes.TEXT,
         allowNull: true
     },
@@ -41,8 +38,25 @@ const TourDetail = sequelize.define("tour_detail", {
         type: DataTypes.DATE,
         allowNull: false
     },
+    destination_place: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }, 
+    booked_number : {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 0
+    },
     time: {
         type: DataTypes.STRING,
+        allowNull: true
+    },
+    departure_time: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    deadline_book_time: {
+        type: DataTypes.DATE,
         allowNull: false
     },
     price: {
@@ -63,6 +77,6 @@ const TourDetail = sequelize.define("tour_detail", {
     }
 })
 
-TourDetail.belongsTo(Tour)
+// TourDetail.belongsTo(Tour)
 
 module.exports = TourDetail
