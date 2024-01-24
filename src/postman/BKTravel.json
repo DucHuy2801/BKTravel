@@ -1,0 +1,512 @@
+{
+	"info": {
+		"_postman_id": "596d38a1-c12a-4873-9aad-9b799e6881d4",
+		"name": "BKTravel",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31351141"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\": \"Huy\",\r\n    \"lastname\": \"Nguyen\",\r\n    \"email\": \"huy.nguyen28012002@hcmut.edu.vn\",\r\n    \"password\": \"123456789\",\r\n    \"confirm_password\": \"123456789\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"huy.nguyen28012002@hcmut.edu.vn\",\r\n    \"password\": \"abcd1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forgotpassword",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"huy.nguyen28012002@hcmut.edu.vn\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/v1/api/user/forgotPassword",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"api",
+						"user",
+						"forgotPassword"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetRedirectGoogle",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/auth/google/redirect",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"google",
+						"redirect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GoogleCallback",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/v1/auth/google/callback",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"google",
+						"callback"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetInfoUser",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNjA3NDI0NiwiZXhwIjoxNzA2MDc2MDQ2fQ.e8ceK8R1EA9l2Rg0L5EP9foKw1mja0OJuIFNqj8TiRM",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/:user_id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						":user_id"
+					],
+					"variable": [
+						{
+							"key": "user_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Info User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone_number\": \"0979957328\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/update/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"update",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload avatar",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "avatar",
+							"type": "file",
+							"src": "postman-cloud:///1eeb947a-46ce-42c0-a395-2d0448a1cf3a"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/upload/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"upload",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create tour",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Du Thuyền Sea Coral - Ngắm Hoàng Hôn & Ăn Tối, Thưởng Thức Vịnh Nha Trang Về Đêm\", \r\n    \"max_customer\": \"100\", \r\n    \"departure_date\": \"2024-01-24\", \r\n    \"deadline_book_time\": \"2024-29-01\",\r\n    \"departure_time\": \"8 A.M\", \r\n    \"departure_place\": \"Hồ Chí Minh\", \r\n    \"destination_place\": \"Nha Trang\",\r\n    \"time\" : \"13 giờ\", \r\n    \"price\": \"2810000\", \r\n    \"highlight\": \"Bao gồm Du Thuyền Sea Coral - Ngắm Hoàng Hôn & Ăn Tối, Thưởng Thức Vịnh Nha Trang Về Đêm và 10 điểm tham quan\", \r\n    \"note\": \"You should to contact the operator to provide your information for check-in process (ID card/passport…), you may be rejected for check-in if you do not provide this information\", \r\n    \"description\": \"Vịnh Nha Trang được mệnh danh là nơi ngắm hoàng hôn đẹp nhất Việt Nam với đường chân trời thẳng tắp và màu biển xanh ngọc lục bảo quý hiếm. Trải nghiệm ngắm hoàng hôn trên vịnh Nha Trang sẽ lưu luyến trong tâm trí mọi du khách nếu có dịp chiêm ngưỡng. Sea Coral tự hào là du thuyền sang trọng trên vịnh Nha Trang, mang đến cho quý khách hải trình đặc sắc, tận hưởng bữa tối lãng mạn trong không gian sang trọng, thưởng thức những ly cocktail, đồ uống đa dạng, hòa mình cùng âm nhạc du dương và thư giãn ngắm nhìn khoảnh khắc mặt trời xuống biển rực rỡ.\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/tour",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"tour"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get one tour",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Du Thuyền Sea Coral - Ngắm Hoàng Hôn & Ăn Tối, Thưởng Thức Vịnh Nha Trang Về Đêm\", \r\n    \"max_customer\": \"100\", \r\n    \"departure_date\": \"2024-01-24\", \r\n    \"deadline_book_time\": \"2024-29-01\",\r\n    \"departure_time\": \"8 A.M\", \r\n    \"departure_place\": \"Hồ Chí Minh\", \r\n    \"destination_place\": \"Nha Trang\",\r\n    \"time\" : \"13 giờ\", \r\n    \"price\": \"2810000\", \r\n    \"highlight\": \"Bao gồm Du Thuyền Sea Coral - Ngắm Hoàng Hôn & Ăn Tối, Thưởng Thức Vịnh Nha Trang Về Đêm và 10 điểm tham quan\", \r\n    \"note\": \"You should to contact the operator to provide your information for check-in process (ID card/passport…), you may be rejected for check-in if you do not provide this information\", \r\n    \"description\": \"Vịnh Nha Trang được mệnh danh là nơi ngắm hoàng hôn đẹp nhất Việt Nam với đường chân trời thẳng tắp và màu biển xanh ngọc lục bảo quý hiếm. Trải nghiệm ngắm hoàng hôn trên vịnh Nha Trang sẽ lưu luyến trong tâm trí mọi du khách nếu có dịp chiêm ngưỡng. Sea Coral tự hào là du thuyền sang trọng trên vịnh Nha Trang, mang đến cho quý khách hải trình đặc sắc, tận hưởng bữa tối lãng mạn trong không gian sang trọng, thưởng thức những ly cocktail, đồ uống đa dạng, hòa mình cùng âm nhạc du dương và thư giãn ngắm nhìn khoảnh khắc mặt trời xuống biển rực rỡ.\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/tour/:tour_detail_id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"tour",
+						":tour_detail_id"
+					],
+					"variable": [
+						{
+							"key": "tour_detail_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all tours",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Du Thuyền Sea Coral - Ngắm Hoàng Hôn & Ăn Tối, Thưởng Thức Vịnh Nha Trang Về Đêm\", \r\n    \"max_customer\": \"100\", \r\n    \"departure_date\": \"2024-01-24\", \r\n    \"deadline_book_time\": \"2024-29-01\",\r\n    \"departure_time\": \"8 A.M\", \r\n    \"departure_place\": \"Hồ Chí Minh\", \r\n    \"destination_place\": \"Nha Trang\",\r\n    \"time\" : \"13 giờ\", \r\n    \"price\": \"2810000\", \r\n    \"highlight\": \"Bao gồm Du Thuyền Sea Coral - Ngắm Hoàng Hôn & Ăn Tối, Thưởng Thức Vịnh Nha Trang Về Đêm và 10 điểm tham quan\", \r\n    \"note\": \"You should to contact the operator to provide your information for check-in process (ID card/passport…), you may be rejected for check-in if you do not provide this information\", \r\n    \"description\": \"Vịnh Nha Trang được mệnh danh là nơi ngắm hoàng hôn đẹp nhất Việt Nam với đường chân trời thẳng tắp và màu biển xanh ngọc lục bảo quý hiếm. Trải nghiệm ngắm hoàng hôn trên vịnh Nha Trang sẽ lưu luyến trong tâm trí mọi du khách nếu có dịp chiêm ngưỡng. Sea Coral tự hào là du thuyền sang trọng trên vịnh Nha Trang, mang đến cho quý khách hải trình đặc sắc, tận hưởng bữa tối lãng mạn trong không gian sang trọng, thưởng thức những ly cocktail, đồ uống đa dạng, hòa mình cùng âm nhạc du dương và thư giãn ngắm nhìn khoảnh khắc mặt trời xuống biển rực rỡ.\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/tour/:tour_detail_id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"tour",
+						":tour_detail_id"
+					],
+					"variable": [
+						{
+							"key": "tour_detail_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forgot password",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"huy.nguyen28012002@hcmut.edu.vn\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/forgot-password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"forgot-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset password",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"new_password\": \"abcd1234\",\r\n    \"confirm_password\": \"abcd1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/reset-password/:user_id/:access_token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"reset-password",
+						":user_id",
+						":access_token"
+					],
+					"variable": [
+						{
+							"key": "user_id",
+							"value": "1"
+						},
+						{
+							"key": "access_token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJ0eXBlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNjAwMDIzMCwiZXhwIjoxNzA2MDAyMDMwfQ.XOK83etMFi_ZQW3OX_QNP0TQIa3Xp7ndezPhaqOoOOw"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GoogleCallback Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"huybachkhoa2801@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/auth/login-success/114100398577489927435",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login-success",
+						"114100398577489927435"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
