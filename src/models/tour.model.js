@@ -60,6 +60,6 @@ const Tour = sequelize.define('tour', {
     }
 })
 
-Tour.hasMany(TourDetail)
+// Tour.hasMany(TourDetail)
 
 module.exports = Tour
