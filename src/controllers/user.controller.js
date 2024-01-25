@@ -1,5 +1,7 @@
 'use strict'
 
+const cloudinary = require("../utils/cloudinary")
+
 const User = require("../models/user.model")
 const sendMail = require("../utils/sendMail")
 const bcrypt = require("bcrypt")
@@ -25,6 +27,7 @@ class UserController {
     updateInfoUser = async (req, res) => {
         const user_id = req.params.user_id
         const update_info = req.body
+        
         const result = await User.update(update_info, {
             where: { user_id }
         })
@@ -43,22 +46,29 @@ class UserController {
 
     uploadAvatar = async (req, res) => {
         try {
-            const avatar = req.file.filename
+            const avatar = req.file.path
             const user_id = req.params.user_id
             const user = await User.findOne({ where: { user_id }})
             if (!user) {
                 return res.status(404).json({Message: "Not found user!"})
             }
+            const result = await cloudinary.uploader.upload(avatar)
+
             const data = {
-                avatar: avatar
+                avatar: result.secure_url
             }
             const updated_user = await User.update(data, {
                 where: { user_id }
             })
             if (updated_user != 1) {
-                return res.status(403).json({ message: "Upload fail!"})
+                return res.status(403).json({ 
+                    message: "Upload fail!"
+                })
             }
-            return res.status(200).json({ message: "Upload profile picture successfully!" })
+            return res.status(200).json({ 
+                // link: result.secure_url,
+                message: "Upload profile picture successfully!" 
+            })
             
 
         } catch (error) {
@@ -66,6 +76,14 @@ class UserController {
                 message: "false"
             })
         }
+        // try {
+        //     const avatar = req.file.path
+        //     console.log(`avatart`, avatar)
+        //     const result = await cloudinary.uploader.upload(avatar)
+        //     console.log(result)
+        // } catch(error) {
+        //     console.log(error)
+        // }
     }
 
     changePassword = async (req, res, next) => {
@@ -105,7 +123,7 @@ class UserController {
             user.code = code;
             user.expired_time_code = expirationTime;
             await user.save()
-            
+
             sendMail(email, code)
             return res.status(200).json({
                 status: 'Success',
@@ -154,6 +172,9 @@ class UserController {
         
     }
 
+    proposeTour = async (req, res, next) => {
+        
+    }
 }
 
 module.exports = new UserController()
