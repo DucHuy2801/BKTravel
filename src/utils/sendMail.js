@@ -1,9 +1,11 @@
 'use strict'
 
 const nodemailer = require('nodemailer')
+const moment = require("moment")
 
-const sendMail = (email, url, expiresIn) => {
-    const code = Math.floor(100000 + Math.random()*900000)
+const sendMail = (email, code) => {
+    // const code = Math.floor(100000 + Math.random()*900000)
+    // const expire_time = moment().add(2, 'minutes')
 
     const transporter = nodemailer.createTransport({
 		service: 'gmail',
@@ -24,16 +26,9 @@ const sendMail = (email, url, expiresIn) => {
                 <p style="font-weight: 700;">Xin chào!</p>
                 <p style="font-size:14px;">Gần đây đã có người yêu cầu đặt lại mật khẩu cho tài khoản của bạn</p>
                 <div style="text-align:center; margin-top:2rem">
-                    <a href="${url}"
-                        style="background-color: black; padding: 0.5rem 1rem; border-radius: 0.3rem; text-decoration: none; font-weight: 300; color:beige">Đặt
-                        lại
-                        mật
-                        khẩu</a> 
-                </div>
-                <div style="text-align:center; margin-top:2rem">
                     <a>Code: ${code}</a>
                 </div>
-                <p>Mã này sẽ hết hạn sau ${expiresIn} phút</p>
+                <p>Mã này sẽ hết hạn sau 2 phút</p>
                 <br />
                 <p style="font-weight:700;">Bạn đã không yêu cầu thay đổi này?</p>
                 <span>Nếu bạn đã không yêu cầu mật khẩu mới, hãy bỏ qua email này</span>
