@@ -1,10 +1,9 @@
 'use strict'
 
-const { DataTypes } = require("sequelize")
-const sequelize  = require("../database/index")
-const TourDetail = require("./tour_detail.model")
+const { DataTypes } = require("sequelize");
+const sequelize = require("../database/index")
 
-const Tour = sequelize.define('tour', {
+const Tour = sequelize.define("tour", {
     tour_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -14,52 +13,69 @@ const Tour = sequelize.define('tour', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    amount: {
+    cover_image: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    description_place: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    current_customers: {
         type: DataTypes.INTEGER,
         allowNull: false
+    },
+    max_customer: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    departure_place: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
     departure_date: {
         type: DataTypes.DATE,
         allowNull: false
     },
-    departure_place: {
+    destination_place: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }, 
+    booked_number : {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 0
+    },
+    time: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    departure_time: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    concentration_time: {
+    deadline_book_time: {
         type: DataTypes.DATE,
-        allowNull: false
-    },
-    cover_image: {
-        type: DataTypes.STRING,
         allowNull: false
     },
     price: {
         type: DataTypes.FLOAT,
         allowNull: false
     },
-    highlight_tour: {
-        type: DataTypes.STRING,
-        allowNull: true
+    highlight: {
+        type: DataTypes.TEXT,
+        allowNull: false
     },
     note: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: false
     },
     description: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    vote: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-        validate: {
-            min: 1,
-            max: 5
-        }
+        type: DataTypes.TEXT,
+        allowNull: false
     }
 })
 
-// Tour.hasMany(TourDetail)
+// TourDetail.belongsTo(Tour)
 
 module.exports = Tour
