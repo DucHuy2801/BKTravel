@@ -3,8 +3,8 @@
 const User = require("../models/user.model")
 const sendMail = require("../utils/sendMail")
 const bcrypt = require("bcrypt")
-const { createAccessToken } = require("../services/auth.service")
-const jwt = require("jsonwebtoken")
+const moment = require("moment")
+const { isValidCode } = require("../utils/validCode")
 
 class UserController {
 
@@ -13,7 +13,7 @@ class UserController {
         const user = await User.findOne({
             where: {user_id},
             attributes: {
-                exclude: ['access_token', 'refresh_token', 'createdAt', 'updatedAt']
+                exclude: ['access_token', 'refresh_token', 'createdAt', 'updatedAt', 'code', 'expired_time_code']
             }
         })
         if (!user) return res.status(404).json({ Message: "User doesn't exist!"})
@@ -93,45 +93,55 @@ class UserController {
         return res.status(200).json
     }
 
-    // ...continue
     forgotPassword = async (req, res, next) => {
         try {
-             const { email } = req.body;
-             const user = await User.findOne({ where: { email }})
-             if (!user) {
-                 return res.status(404).json({ status: 'Fail', message: "Gmail is not used by account!" })
-             }
-             const accessToken = await createAccessToken({
-                user_id: user.user_id, email: user.email, type_user: "customer"}, '30m')
- 
-             const url = `${process.env.URL_CLIENT}/user/reset-password/${accessToken}`
- 
-             sendMail(email, url, '30m')
-             return res.status(200).json({
-                 status: 'Success',
-                 message: 'Send mail, please check to your gmail!',
-             })
+            const { email } = req.body;
+            const user = await User.findOne({ where: { email }})
+            if (!user) {
+                return res.status(404).json({ status: 'Fail', message: "Gmail is not used by account!" })
+            }
+            const code = Math.floor(100000 + Math.random()*900000)
+            const expirationTime = moment().add(2, 'minutes');
+            user.code = code;
+            user.expired_time_code = expirationTime;
+            await user.save()
+            console.log(`code:::`, user.code)
+            console.log(`expired_time_code`, user.expired_time_code)
+            sendMail(email, code)
+            return res.status(200).json({
+                status: 'Success',
+                message: 'Send mail, please check to your gmail!',
+            })
         } catch (error) {
              return res.status(500).json({ status: 'Faile', message: error.message })
         } 
     }
 
     resetPassword = async (req, res, next) => {
-        const { user_id, access_token } = req.params
-        const { new_password, confirm_password } = req.body
+        const { new_password, confirm_password, code } = req.body
 
-        const user = User.findOne({ where: { user_id }})
+        const user = await User.findOne({ where: { code }})
+
         if (!user) return res.status(400).json({ Message: "Not found user!"})
 
+        if (user.code !== code) 
+            return res.status(400).json({ Message: "Code is wrong!"})
+
+        const checkValid = await isValidCode(user.expire_time_code);
+        if (!checkValid) {
+            user.expired_time_code = null;
+            user.code = null;
+            return res.status(400).json({ Message: "Code is expired!"})
+        }
+        
         if (new_password !== confirm_password) 
             return res.status(400).json({ Message: "Password doesn't match"})
 
         try {
-            const is_verify = jwt.verify(access_token, process.env.ACCESS_TOKEN_SECRET)
             const hash_password = await bcrypt.hash(new_password, 10)
             const update_password = await User.update({ 
-                password: hash_password}, {
-                    where: { user_id }
+                password: hash_password }, {
+                    where: { code }
                 }
             )
             if (!update_password) {
