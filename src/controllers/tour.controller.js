@@ -1,6 +1,6 @@
 'use strict'
 
-const TourDetail = require("../models/tour_detail.model")
+const Tour = require("../models/tour.model")
 const jwt = require("jsonwebtoken")
 
 class TourController {
@@ -20,7 +20,7 @@ class TourController {
         const parts = deadline_book_time.split('-');
         const parsedDeadlineBookTime = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
 
-        const newTour = new TourDetail({
+        const newTour = new Tour({
             name, max_customer, departure_date, departure_time, departure_place, destination_place,
             time, price, highlight, note, description, deadline_book_time: parsedDeadlineBookTime,
             current_customers: 0
@@ -38,14 +38,25 @@ class TourController {
     }
 
     updateTour = async (req, res, next) => {
+        const tour_id = req.params.tour_id;
+        const updated_tour = req.body;
 
+        const tour = await Tour.findOne({ where: { tour_id }})
+        if (!tour) return res.status(404).json({ Message: "Not found tour"})
+
+        const result = await Tour.update(updated_tour, {
+            where: { tour_id }
+        })
+        if (!result) 
+            return res.status(400).json({ Message: "Update fail!"})
+        return res.status(200).json({Message: "Update tour successfully!"})
     }
 
     getTour = async (req, res, next) => {
         try {
-            const tour_detail_id = req.params.tour_detail_id;
-            const tour = await TourDetail.findOne({
-                where: { tour_detail_id },
+            const tour_id = req.params.tour_id;
+            const tour = await Tour.findOne({
+                where: { tour_id },
                 attributes: {
                     exclude: ['updatedAt', 'createdAt']
                 }
@@ -62,7 +73,7 @@ class TourController {
 
     getAllTours = async (req, res, next) => {
         try {
-            const all_tours = await TourDetail.findAll({
+            const all_tours = await Tour.findAll({
                 attributes: {
                     exclude: ['updatedAt', 'createdAt']
                 }
@@ -77,7 +88,16 @@ class TourController {
     }
 
     deleteTour = async (req, res, next) => {
-        
+        try {
+            const tour_id = req.params.tour_id
+            const tour = await Tour.findOne({ where : { tour_id }})
+            if (!tour) return res.status(404).json({ Message: "Not found tour!"})
+
+            await tour.destroy()
+            return res.status(200).json({ Message: "Delete tour successfully"})
+        } catch (error) {
+            return res.status(400).json({ Message: error})
+        }
     }
 }
 
