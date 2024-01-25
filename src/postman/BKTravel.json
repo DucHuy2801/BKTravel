@@ -44,7 +44,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"huy.nguyen28012002@hcmut.edu.vn\",\r\n    \"password\": \"abcd1234\"\r\n}",
+					"raw": "{\r\n    \"email\": \"huy.nguyen28012002@hcmut.edu.vn\",\r\n    \"password\": \"123456789\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -83,17 +83,48 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/v1/api/user/forgotPassword",
+					"raw": "http://localhost:8080/api/v1/user/forgot-password",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5000",
+					"port": "8080",
 					"path": [
-						"v1",
 						"api",
+						"v1",
 						"user",
-						"forgotPassword"
+						"forgot-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resetpassword",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"new_password\": \"abcd1234\",\r\n    \"confirm_password\": \"abcd1234\",\r\n    \"code\": \"521658\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/reset-password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"reset-password"
 					]
 				}
 			},
@@ -319,7 +350,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/tour/:tour_detail_id",
+					"raw": "http://localhost:8080/api/v1/tour/:tour_id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -329,11 +360,11 @@
 						"api",
 						"v1",
 						"tour",
-						":tour_detail_id"
+						":tour_id"
 					],
 					"variable": [
 						{
-							"key": "tour_detail_id",
+							"key": "tour_id",
 							"value": "1"
 						}
 					]
@@ -343,9 +374,6 @@
 		},
 		{
 			"name": "Get all tours",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [
@@ -356,17 +384,8 @@
 						"disabled": true
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Du Thuyền Sea Coral - Ngắm Hoàng Hôn & Ăn Tối, Thưởng Thức Vịnh Nha Trang Về Đêm\", \r\n    \"max_customer\": \"100\", \r\n    \"departure_date\": \"2024-01-24\", \r\n    \"deadline_book_time\": \"2024-29-01\",\r\n    \"departure_time\": \"8 A.M\", \r\n    \"departure_place\": \"Hồ Chí Minh\", \r\n    \"destination_place\": \"Nha Trang\",\r\n    \"time\" : \"13 giờ\", \r\n    \"price\": \"2810000\", \r\n    \"highlight\": \"Bao gồm Du Thuyền Sea Coral - Ngắm Hoàng Hôn & Ăn Tối, Thưởng Thức Vịnh Nha Trang Về Đêm và 10 điểm tham quan\", \r\n    \"note\": \"You should to contact the operator to provide your information for check-in process (ID card/passport…), you may be rejected for check-in if you do not provide this information\", \r\n    \"description\": \"Vịnh Nha Trang được mệnh danh là nơi ngắm hoàng hôn đẹp nhất Việt Nam với đường chân trời thẳng tắp và màu biển xanh ngọc lục bảo quý hiếm. Trải nghiệm ngắm hoàng hôn trên vịnh Nha Trang sẽ lưu luyến trong tâm trí mọi du khách nếu có dịp chiêm ngưỡng. Sea Coral tự hào là du thuyền sang trọng trên vịnh Nha Trang, mang đến cho quý khách hải trình đặc sắc, tận hưởng bữa tối lãng mạn trong không gian sang trọng, thưởng thức những ly cocktail, đồ uống đa dạng, hòa mình cùng âm nhạc du dương và thư giãn ngắm nhìn khoảnh khắc mặt trời xuống biển rực rỡ.\" \r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/tour/:tour_detail_id",
+					"raw": "http://localhost:8080/api/v1/tour/all",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -376,13 +395,7 @@
 						"api",
 						"v1",
 						"tour",
-						":tour_detail_id"
-					],
-					"variable": [
-						{
-							"key": "tour_detail_id",
-							"value": "1"
-						}
+						"all"
 					]
 				}
 			},
