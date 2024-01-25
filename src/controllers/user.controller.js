@@ -105,8 +105,7 @@ class UserController {
             user.code = code;
             user.expired_time_code = expirationTime;
             await user.save()
-            console.log(`code:::`, user.code)
-            console.log(`expired_time_code`, user.expired_time_code)
+            
             sendMail(email, code)
             return res.status(200).json({
                 status: 'Success',
