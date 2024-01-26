@@ -1,7 +1,10 @@
 'use strict'
 
+const cloudinary = require("../utils/cloudinary")
+
 const Tour = require("../models/tour.model")
-const jwt = require("jsonwebtoken")
+const Sequelize = require("sequelize")
+const Op = Sequelize.Op
 
 class TourController {
 
@@ -11,19 +14,17 @@ class TourController {
         // const role_user = decodeUser['role_user']
         // if (role_user !== 'admin') 
         //     return res.status(401).json({ Message: "Unauthorized for creating tour!"})
-
+        
         const { name, max_customer, departure_date, departure_time, departure_place, destination_place,
-                time, price, highlight, note, description, deadline_book_time } = req.body;
-
-        // const cover_image = req.file.filename
-
-        const parts = deadline_book_time.split('-');
-        const parsedDeadlineBookTime = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+                time, price, highlight, note, description, deadline_book_time } = req.fields; 
+        
+        const result = req.files.cover_image.path
+        const link_cover_image = await cloudinary.uploader.upload(result)
 
         const newTour = new Tour({
             name, max_customer, departure_date, departure_time, departure_place, destination_place,
-            time, price, highlight, note, description, deadline_book_time: parsedDeadlineBookTime,
-            current_customers: 0
+            time, price, highlight, note, description, deadline_book_time,
+            current_customers: 0, cover_image: link_cover_image.secure_url
         })
 
         const savedTour = await newTour.save().catch((error) => {
@@ -98,6 +99,20 @@ class TourController {
         } catch (error) {
             return res.status(400).json({ Message: error})
         }
+    }
+
+    searchTour = async (req, res, next) => {
+        const destination_place  = req.query.destination_place;
+        // const departure_place = req.query.departure_place
+
+        const tours = await Tour.findAll({ where: { 
+            destination_place: { [Op.like]: '%' + destination_place + '%' },
+            // departure_place: { [Op.like]: '%' + departure_place + '%' }
+        } })
+
+        return res.status(200).json({
+            data: tours
+        })
     }
 }
 
