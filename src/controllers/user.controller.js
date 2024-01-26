@@ -66,7 +66,7 @@ class UserController {
                 })
             }
             return res.status(200).json({ 
-                // link: result.secure_url,
+                url_image: result.secure_url,
                 message: "Upload profile picture successfully!" 
             })
             
@@ -76,14 +76,6 @@ class UserController {
                 message: "false"
             })
         }
-        // try {
-        //     const avatar = req.file.path
-        //     console.log(`avatart`, avatar)
-        //     const result = await cloudinary.uploader.upload(avatar)
-        //     console.log(result)
-        // } catch(error) {
-        //     console.log(error)
-        // }
     }
 
     changePassword = async (req, res, next) => {
