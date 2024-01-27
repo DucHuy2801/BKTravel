@@ -151,7 +151,7 @@ class UserController {
         try {
             const hash_password = await bcrypt.hash(new_password, 10)
             const update_password = await User.update({ 
-                password: hash_password }, {
+                password: hash_password, code: null, expired_time_code: null }, {
                     where: { code }
                 }
             )
