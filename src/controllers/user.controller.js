@@ -115,7 +115,8 @@ class UserController {
             user.code = code;
             user.expired_time_code = expirationTime;
             await user.save()
-
+            console.log(`code`, user.code)
+            console.log(`expiored`, user.expired_time_code)
             sendMail(email, code)
             return res.status(200).json({
                 status: 'Success',
@@ -132,6 +133,7 @@ class UserController {
         const user = await User.findOne({ where: { code }})
 
         if (!user) return res.status(400).json({ Message: "Not found user!"})
+        console.log(`2`, user.code)
 
         if (user.code !== code) 
             return res.status(400).json({ Message: "Code is wrong!"})
