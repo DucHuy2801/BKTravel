@@ -132,13 +132,13 @@ class UserController {
 
         const user = await User.findOne({ where: { code }})
 
-        if (!user) return res.status(400).json({ Message: "Not found user!"})
+        if (!user) return res.status(400).json({ Message: "Code is wrong!"})
         console.log(`2`, user.code)
 
         if (user.code !== code) 
             return res.status(400).json({ Message: "Code is wrong!"})
 
-        const checkValid = await isValidCode(user.expire_time_code);
+        const checkValid = await isValidCode(user.expired_time_code);
         if (!checkValid) {
             user.expired_time_code = null;
             user.code = null;
