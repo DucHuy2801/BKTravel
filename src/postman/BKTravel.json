@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"firstname\": \"Huy\",\r\n    \"lastname\": \"Nguyen\",\r\n    \"email\": \"huy.nguyen28012002@hcmut.edu.vn\",\r\n    \"password\": \"123456789\",\r\n    \"confirm_password\": \"123456789\"\r\n}",
+					"raw": "{\r\n    \"firstname\": \"Huy\",\r\n    \"lastname\": \"Nguyen\",\r\n    \"email\": \"theflash28012002@gmail.com\",\r\n    \"password\": \"123456789\",\r\n    \"confirm_password\": \"123456789\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -106,7 +106,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"new_password\": \"abcd1234\",\r\n    \"confirm_password\": \"abcd1234\",\r\n    \"code\": \"521658\"\r\n}",
+					"raw": "{\r\n    \"new_password\": \"28012002\",\r\n    \"confirm_password\": \"28012002\",\r\n    \"code\": \"811445\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -221,7 +221,8 @@
 					{
 						"key": "Authorization",
 						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNjA3NDI0NiwiZXhwIjoxNzA2MDc2MDQ2fQ.e8ceK8R1EA9l2Rg0L5EP9foKw1mja0OJuIFNqj8TiRM",
-						"type": "text"
+						"type": "text",
+						"disabled": true
 					}
 				],
 				"body": {
@@ -229,7 +230,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/tour/search?destination_place=phu",
+					"raw": "http://localhost:8080/api/v1/tour/search?departure_place=Phú Yên&destination_place=Đà Nẵng&time=1 ngày",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -243,12 +244,20 @@
 					],
 					"query": [
 						{
-							"key": "destination_place",
-							"value": "phu"
+							"key": "departure_place",
+							"value": "Phú Yên"
 						},
 						{
-							"key": "departure_place",
-							"value": "ho",
+							"key": "destination_place",
+							"value": "Đà Nẵng"
+						},
+						{
+							"key": "time",
+							"value": "1 ngày"
+						},
+						{
+							"key": "departure_date",
+							"value": "2024-01-26",
 							"disabled": true
 						}
 					]
@@ -375,7 +384,7 @@
 						},
 						{
 							"key": "departure_place",
-							"value": "Đà Nẵng",
+							"value": "Phú Yên",
 							"type": "text"
 						},
 						{
@@ -434,7 +443,7 @@
 		{
 			"name": "Delete tour",
 			"request": {
-				"method": "POST",
+				"method": "DELETE",
 				"header": [
 					{
 						"key": "Authorization",
@@ -514,7 +523,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/tour",
+					"raw": "http://localhost:8080/api/v1/tour/:tour_id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -523,7 +532,14 @@
 					"path": [
 						"api",
 						"v1",
-						"tour"
+						"tour",
+						":tour_id"
+					],
+					"variable": [
+						{
+							"key": "tour_id",
+							"value": "4"
+						}
 					]
 				}
 			},
@@ -569,7 +585,7 @@
 					"variable": [
 						{
 							"key": "tour_id",
-							"value": "1"
+							"value": "11"
 						}
 					]
 				}
@@ -657,7 +673,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"new_password\": \"abcd1234\",\r\n    \"confirm_password\": \"abcd1234\"\r\n}",
+					"raw": "{\r\n    \"new_password\": \"abcd1234\",\r\n    \"confirm_password\": \"abcd1234\",\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
