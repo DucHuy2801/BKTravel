@@ -34,10 +34,7 @@ User.init(
         },
         dob: {
             type: DataTypes.DATE,
-            allowNull: true,
-            validate: {
-                isData: true
-            }
+            allowNull: true
         },
         avatar: {
             type: DataTypes.STRING,
