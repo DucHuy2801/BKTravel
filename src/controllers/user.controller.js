@@ -6,7 +6,8 @@ const User = require("../models/user.model")
 const sendMail = require("../utils/sendMail")
 const bcrypt = require("bcrypt")
 const moment = require("moment")
-const { isValidCode } = require("../utils/validCode")
+const { isExpired } = require("../utils/checkExpire")
+const Wishlist = require("../models/wishlist.model")
 
 class UserController {
 
@@ -115,7 +116,7 @@ class UserController {
             user.code = code;
             user.expired_time_code = expirationTime;
             await user.save()
-            
+
             sendMail(email, code)
             return res.status(200).json({
                 status: 'Success',
@@ -131,12 +132,10 @@ class UserController {
 
         const user = await User.findOne({ where: { code }})
 
-        if (!user) return res.status(400).json({ Message: "Code is wrong!"})
-
-        if (user.code !== code) 
+        if (!user || (user.code !== code)) 
             return res.status(400).json({ Message: "Code is wrong!"})
 
-        const checkValid = await isValidCode(user.expired_time_code);
+        const checkValid = await isExpired(user.expired_time_code);
         if (!checkValid) {
             user.expired_time_code = null;
             user.code = null;
@@ -164,7 +163,49 @@ class UserController {
         
     }
 
-    proposeTour = async (req, res, next) => {
+    addTourToWishlist = async (req, res, next) => {
+        const user_id = req.params.user_id
+        const tour_id = req.params.tour_id
+
+        try {
+            const existWishlist = await Wishlist.findOne({
+                where: {
+                    user_id: user_id,
+                    tour_id: tour_id
+                }
+            })
+
+            if (existWishlist) {
+                return res.status(400).json({
+                    message: "Tour already exists in the wishlist!"
+                })
+            }
+
+            const added_tour = await Wishlist.create({
+                user_id: user_id,
+                tour_id: tour_id
+            })
+
+            return res.status(201).json({
+                message: "Add tour to wishlist successfully!",
+                added_tour: added_tour
+            })
+        } catch (error) {
+            return res.status(500).json({
+                message: error.message
+            })
+        }
+    }
+
+    getWishListByCustomer = async (req, res, next) => {
+        
+    }
+
+    addTourToOrder = async (req, res, next) => {
+
+    }
+
+    cancelOrderTour = async (req, res, next) => {
         
     }
 }
