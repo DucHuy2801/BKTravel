@@ -11,11 +11,40 @@ const typeVoucher = {
 const Voucher = sequelize.define("voucher", {
     voucher_id: {
         type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    image: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    code_voucher: {
+        type: DataTypes.STRING,
         allowNull: false
     },
     type: {
         type: DataTypes.ENUM(typeVoucher.PERCENT, typeVoucher.FIXED),
         allowNull: false
+    },
+    value_discount: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+    },
+    max_number: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    remain_number: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    min_order_value: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+    },
+    is_active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
     },
     start_date: {
         type: DataTypes.DATE,
