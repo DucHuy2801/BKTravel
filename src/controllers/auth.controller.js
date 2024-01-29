@@ -1,7 +1,6 @@
 'use strict'
 
 const User = require("../models/user.model")
-const { BadRequestError } = require("../core/error.response")
 const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken")
 const { findUserByEmail } = require("../services/user.service")
@@ -14,13 +13,17 @@ const redirectURI = "auth/google";
 class AuthController {
     register = async (req, res, next) => {
         const { firstname, lastname, email, password, confirm_password } = req.body
+        
 
         const alreadyExistUser = await User.findOne({ where: {email}})
-        if (alreadyExistUser) throw new BadRequestError("Email is exist!")
+        if (alreadyExistUser) 
+            return res.status(400).json({ Message: "Email is already existed!" })
 
-        if (password.length < 6) throw new BadRequestError("Password is weak!")
+        if (password.length < 6) 
+            return res.status(400).json({ Message: "Password is weak!"})
 
-        if (password !== confirm_password) throw new BadRequestError("Password is not matched!")
+        if (password !== confirm_password) 
+            return res.status(400).json({ Message: "Password is not matched!" })
 
         const hassedpassword = await bcrypt.hash(password, 10)
 
@@ -32,6 +35,20 @@ class AuthController {
                 message: "Register successfully!"
             })
         }
+        // let new_customer
+        // if (savedUser) {
+        //     new_customer = await Customer.create({
+        //         user_id: newUser.user_id,
+        //         level: 'Đồng',
+        //         score: 0
+        //     })
+        // }
+
+        // return res.status(201).json({
+        //     message: "Register successfully!",
+        //     user: newUser,
+        //     customer: new_customer
+        // })
     }
 
     login = async (req, res, next) => {
