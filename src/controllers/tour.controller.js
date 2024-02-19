@@ -43,35 +43,35 @@ class TourController {
             dest_id = exist_destination.destination_id
         }
         const attractions = []
-            let i = 0;
-            while (req.fields[`attractions[${i}][name]`]) {
-                const attraction_name = req.fields[`attractions[${i}][name]`]
-                const exist_attraction = await checkExistAttraction(attraction_name, dest_id)
-                if (!exist_attraction) {
-                    attractions.push({ name: attraction_name, destination_id: dest_id})
-                }
-                i++;
+        let i = 0;
+        while (req.fields[`attractions[${i}][name]`]) {
+            const attraction_name = req.fields[`attractions[${i}][name]`]
+            const exist_attraction = await checkExistAttraction(attraction_name, dest_id)
+            if (!exist_attraction) {
+                attractions.push({ name: attraction_name, destination_id: dest_id})
             }
+            // attractions.push({ name: attraction_name, destination_id: dest_id})
+            i++;
+        }
 
-            if (attractions.length > 0) {
-                await Promise.all(
-                    attractions.map(async (attraction) => {
-                        await Attraction.create(attraction)
-                    })
-                )
-            }
-
-            // if (attractions && Array.isArray(attractions)) {
+            // if (attractions.length > 0) {
             //     await Promise.all(
             //         attractions.map(async (attraction) => {
-            //             const { name, address } = attraction;
-            //             await Attraction.create(
-            //                 { name, address, destination_id: dest_id },
-            //             );
+            //             await Attraction.create(attraction)
             //         })
-            //     );
+            //     )
             // }
-        
+
+        if (attractions && Array.isArray(attractions)) {
+            await Promise.all(
+                    attractions.map(async (attraction) => {
+                    const { name, address } = attraction;
+                    await Attraction.create(
+                        { name, address, destination_id: dest_id },
+                    );
+                })
+            );
+        }
         
         const result = req.files.cover_image.path
         const link_cover_image = await cloudinary.uploader.upload(result)
