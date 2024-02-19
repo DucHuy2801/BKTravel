@@ -2,7 +2,6 @@
 
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/index");
-const User = require("./user.model");
 
 const Token = sequelize.define('token', {
     privateKey: {

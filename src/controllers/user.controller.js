@@ -8,6 +8,8 @@ const bcrypt = require("bcrypt")
 const moment = require("moment")
 const { isExpired } = require("../utils/checkExpire")
 const Wishlist = require("../models/wishlist.model")
+const Tour = require("../models/tour.model")
+const Order = require("../models/order.model")
 
 class UserController {
 
@@ -197,16 +199,109 @@ class UserController {
         }
     }
 
-    getWishListByCustomer = async (req, res, next) => {
+    getWishlistByCustomer = async (req, res, next) => {
+        const user_id = req.params.user_id
+
+        const user = await User.findByPk(user_id, {
+            include: {
+                model: Tour,
+                through: Wishlist
+            }
+        })
+
+        if (user) {
+            const favor_tours = user.Tours
+            return res.status(200).json({ 
+                message: "Get wishlist successfully",
+                data: favor_tours
+            })
+        }
+    
+        else {
+            return res.status(404).json({
+                message: "Not found user!"
+            })
+        }
         
     }
 
-    addTourToOrder = async (req, res, next) => {
+    removeTourFromWishlist = async (req, res, next) => {
 
+    }
+
+    // not complete
+    addTourToOrder = async (req, res, next) => {
+        const { tour_id, user_id } = req.params
+        const tour = Tour.findByPk(tour_id)
+        if (!tour) 
+            return res.status(404).json({ message: "Not found tour!"})
+        
+        const user = User.findByPk(user_id)
+        if (!user) 
+            return res.status(404).json({ message: "Not found user!"})
+
+        const newOrder = await Order.create({
+            user_id: user_id,
+            tour_id: tour_id,
+        })
+
+        if (!newOrder) 
+            return res.status(400).json({ message: "Can't add tour to order!"})
+        
+        return res.status(200).json({ message: "Add tour to order successfully!"})
+    }
+
+    getAllToursFromOrder = async (req, res, next) => {
+        const user_id = req.params.user_id
+        const user = User.findByPk(user_id)
+        if (!user) 
+            return res.status(404).json({ message: "Not found user!"})
+
+        const userOrders = await Order.findAll({
+            where: {
+                user_id: user_id
+            }, include: [{
+                model: Tour,
+                // attributes: ['tour_id', 'name', 'departure_date', 'price'],
+            }]
+        })
+
+        if (!userOrders) return res.status(404).json({ message: "Can't get all tours from orders!"})
+        return res.status(200).json({
+            message: "Get all tours from orders successfully!",
+            data: userOrders
+        })
     }
 
     cancelOrderTour = async (req, res, next) => {
-        
+        const { user_id, tour_id, order_id } = req.params
+
+        try {
+            const order = await Order.findOne({
+                where: {
+                    user_id: user_id,
+                    order_id: order_id
+                },
+                include: [{
+                    model: Tour,
+                    where: { tour_id: tour_id }
+                }]
+            })
+
+            if (!order) 
+                return res.status(404).json({ message: "Not found order" })
+
+            await order.update({ tour_id: null }, {
+                where: { tour_id: tour_id }
+            })
+
+            res.status(200).json({ message: 'Tour removed from order successfully' });
+            
+        } catch (error) {
+            return res.status(500).json({
+                message: error.message
+            })
+        }
     }
 }
 

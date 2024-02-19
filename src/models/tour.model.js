@@ -1,9 +1,13 @@
 'use strict'
 
-const { DataTypes } = require("sequelize");
+const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../database/index")
 
-const Tour = sequelize.define("tour", {
+const Order = require("./order.model");
+const Destination = require("./destination.model");
+
+class Tour extends Model {}
+Tour.init({
     tour_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -74,8 +78,9 @@ const Tour = sequelize.define("tour", {
         type: DataTypes.TEXT,
         allowNull: false
     }
-})
+},  { sequelize, modelName: 'tour' })
 
-// TourDetail.belongsTo(Tour)
+Tour.hasMany(Order, { foreignKey: 'tour_id' });
+Tour.belongsTo(Destination, { foreignKey: 'destination_id' })
 
 module.exports = Tour

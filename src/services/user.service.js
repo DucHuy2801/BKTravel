@@ -3,7 +3,11 @@
 const User = require('../models/user.model')
 
 const findUserByEmail = async (email) => {
-    return await User.findOne({where: {email}})
+    return await User.findOne({ where: { email }})
+}
+
+const findUserById = async (user_id) => {
+    return await User.findByPk({ where: { user_id }})
 }
 
 const uploadPicture = async (picture_url) => {
@@ -26,5 +30,6 @@ const uploadPicture = async (picture_url) => {
 
 module.exports = {
     findUserByEmail,
-    uploadPicture
+    uploadPicture,
+    findUserById
 }

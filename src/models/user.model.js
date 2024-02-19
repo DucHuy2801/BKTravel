@@ -1,6 +1,8 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../database/index");
 
+const Order = require("./order.model")
+
 const role_user = {
     ADMIN: 'admin',
     GUIDER: 'guider',
@@ -74,5 +76,7 @@ User.init(
         }
     }, { sequelize, modelName: 'user'}
 )
+
+User.hasMany(Order, { foreignKey: 'user_id' });
 
 module.exports = User;

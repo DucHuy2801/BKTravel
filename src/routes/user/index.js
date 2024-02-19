@@ -9,6 +9,7 @@ const upload = require("../../config/cloudinary.config")
 
 router.get("/:user_id", authenticate, asyncHandler(userController.getInfoUser))
 router.post("/change-password", authenticate, asyncHandler(userController.changePassword))
+router.get("/:user_id/wishlist")
 router.post("/update/:user_id", authenticate, asyncHandler(userController.updateInfoUser))
 router.post("/upload/:user_id", authenticate, upload.single("avatar"), asyncHandler(userController.uploadAvatar))
 router.post("/forgot-password", asyncHandler(userController.forgotPassword))
