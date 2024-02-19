@@ -384,7 +384,7 @@
 						},
 						{
 							"key": "departure_place",
-							"value": "Phú Yên",
+							"value": "Hồ Chí Minh",
 							"type": "text"
 						},
 						{
@@ -394,7 +394,7 @@
 						},
 						{
 							"key": "destination_place",
-							"value": "Đà Nẵng",
+							"value": "Hà Nội",
 							"type": "text"
 						},
 						{
@@ -420,6 +420,21 @@
 						{
 							"key": "description",
 							"value": "Nằm ở ngay tại trung tâm Việt Nam, Đà Nẵng là điểm dừng chân không thể bỏ qua cho bất kỳ hành trình nào của bạn ở Việt Nam. Chuyến đi trong ngày này sẽ đưa bạn đến những điểm tham quan hấp dẫn của thành phố và sẽ giúp bạn đắm chìm vào cuộc sống của một cư dân Đà Nẵng điển hình. Bắt đầu với chuyến thăm làng đá Non Nước nằm ngay dưới chân núi Ngũ Hành Sơn. Bạn sẽ có cơ hội chiêm ngưỡng quá trình tạo tác đầy điêu luyện của các nghệ nhân. Sau đó, bạn tiếp tục đến tham quan chùa Linh Ứng Bãi Bụt, ngôi chùa lớn nhất của thành phố. Hoạt động kế theo chính là trải nghiệm cầu Thuận Phước, cầy dây văng dài nhất Việt Nam, trong khi ngắm nhìn cảnh đẹp trên sông Hàn và những vùng xung quanh. Điểm đến sau đó là Bảo Tàng Điêu Khắc Chăm, nơi lưu giữ hình ảnh của những người Chăm bản địa từng sinh sống nơi đây. Bạn sẽ dừng ăn trưa tại nhà hàng gần đó, nạp năng lượng để chuẩn bị cho điểm tham quan cuối: chợ Hàn - nơi bạn có thể khám phá nhịp sống và buôn bán tấp nập của người địa phương. Sau đó bạn sẽ được đưa về tận khách sạn hoặc điểm tập trung ban đầu và kết thúc tour.",
+							"type": "text"
+						},
+						{
+							"key": "attractions[0][name]",
+							"value": "Dinh Độc Lập",
+							"type": "text"
+						},
+						{
+							"key": "attractions[1][name]",
+							"value": "Cầu Bà Đen",
+							"type": "text"
+						},
+						{
+							"key": "attractions[2][name]",
+							"value": "Chợ Bến Thành",
 							"type": "text"
 						}
 					]
@@ -547,9 +562,6 @@
 		},
 		{
 			"name": "Get one tour",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [
@@ -560,17 +572,8 @@
 						"disabled": true
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Du Thuyền Sea Coral - Ngắm Hoàng Hôn & Ăn Tối, Thưởng Thức Vịnh Nha Trang Về Đêm\", \r\n    \"max_customer\": \"100\", \r\n    \"departure_date\": \"2024-01-24\", \r\n    \"deadline_book_time\": \"2024-29-01\",\r\n    \"departure_time\": \"8 A.M\", \r\n    \"departure_place\": \"Hồ Chí Minh\", \r\n    \"destination_place\": \"Nha Trang\",\r\n    \"time\" : \"13 giờ\", \r\n    \"price\": \"2810000\", \r\n    \"highlight\": \"Bao gồm Du Thuyền Sea Coral - Ngắm Hoàng Hôn & Ăn Tối, Thưởng Thức Vịnh Nha Trang Về Đêm và 10 điểm tham quan\", \r\n    \"note\": \"You should to contact the operator to provide your information for check-in process (ID card/passport…), you may be rejected for check-in if you do not provide this information\", \r\n    \"description\": \"Vịnh Nha Trang được mệnh danh là nơi ngắm hoàng hôn đẹp nhất Việt Nam với đường chân trời thẳng tắp và màu biển xanh ngọc lục bảo quý hiếm. Trải nghiệm ngắm hoàng hôn trên vịnh Nha Trang sẽ lưu luyến trong tâm trí mọi du khách nếu có dịp chiêm ngưỡng. Sea Coral tự hào là du thuyền sang trọng trên vịnh Nha Trang, mang đến cho quý khách hải trình đặc sắc, tận hưởng bữa tối lãng mạn trong không gian sang trọng, thưởng thức những ly cocktail, đồ uống đa dạng, hòa mình cùng âm nhạc du dương và thư giãn ngắm nhìn khoảnh khắc mặt trời xuống biển rực rỡ.\" \r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/tour/:tour_id",
+					"raw": "http://localhost:8080/api/v1/tour/7",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -580,13 +583,7 @@
 						"api",
 						"v1",
 						"tour",
-						":tour_id"
-					],
-					"variable": [
-						{
-							"key": "tour_id",
-							"value": "11"
-						}
+						"7"
 					]
 				}
 			},
