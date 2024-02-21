@@ -9,6 +9,7 @@ const Op = Sequelize.Op
 const { checkExistDestination } = require("../services/destination.service")
 const { checkExistAttraction } = require("../services/attraction.service")
 const Attraction = require("../models/attraction.model")
+const { StatusTour } = require("../common/status")
 
 const slugify = (text) => {
     return text.toString().toLowerCase()
@@ -150,7 +151,7 @@ class TourController {
         }
     };
 
-    getAllTours = async (req, res, next) => {
+    getAllTours = async(req, res, next) => {
         try {
             const all_tours = await Tour.findAll({
                 attributes: {
@@ -162,7 +163,58 @@ class TourController {
                 data: all_tours
             })
         } catch (error) {
-            return res.status(404).json({ Message: error + "1"})
+            return res.status(500).json({ message: error.message })
+        }
+    }
+
+    getWaitingTours = async(req, res, next) => {
+        try {
+            const tours = await Tour.findAll({
+                where: {
+                    status: StatusTour.WAITING
+                }, attributes: {
+                    exclude: ['updatedAt', 'createdAt']
+                }
+            })
+            return res.status(200).json({
+                tours: tours
+            })
+        } catch (error) {
+            return res.status(500).json({ message: error.message })
+        }
+    }
+
+    getOnlineTours = async(req, res, next) => {
+        try {
+            const tours = await Tour.findAll({
+                where: {
+                    status: StatusTour.ONLINE
+                }, attributes: {
+                    exclude: ['updatedAt', 'createdAt']
+                }
+            })
+            return res.status(200).json({
+                tours: tours
+            })
+        } catch (error) {
+            return res.status(500).json({ message: error.message })
+        }
+    }
+
+    getDeletedTours = async(req, res, next) => {
+        try {
+            const tours = await Tour.findAll({
+                where: {
+                    status: StatusTour.DELETED
+                }, attributes: {
+                    exclude: ['updatedAt', 'createdAt']
+                }
+            })
+            return res.status(200).json({
+                tours: tours
+            })
+        } catch (error) {
+            return res.status(500).json({ message: error.message })
         }
     }
 
@@ -173,9 +225,9 @@ class TourController {
             if (!tour) return res.status(404).json({ Message: "Not found tour!"})
 
             await tour.destroy()
-            return res.status(200).json({ Message: "Delete tour successfully"})
+            return res.status(200).json({ message: "Delete tour successfully"})
         } catch (error) {
-            return res.status(400).json({ Message: error})
+            return res.status(400).json({ message: error})
         }
     }
 
