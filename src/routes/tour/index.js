@@ -14,7 +14,7 @@ router.get("/all/deleted", asyncHandler(tourController.getDeletedTours))
 router.get("/all/online", asyncHandler(tourController.getOnlineTours))
 router.get("/search", tourController.searchTour)
 router.get("/:tour_id", asyncHandler(tourController.getTour))
-router.patch("/:tour_id", asyncHandler(tourController.updateTour))
+router.put("/:tour_id", asyncHandler(tourController.updateTour))
 router.delete("/:tour_id", asyncHandler(tourController.deleteTour))
 
 module.exports = router
