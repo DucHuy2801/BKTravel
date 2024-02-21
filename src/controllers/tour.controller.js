@@ -50,17 +50,8 @@ class TourController {
             if (!exist_attraction) {
                 attractions.push({ name: attraction_name, destination_id: dest_id})
             }
-            // attractions.push({ name: attraction_name, destination_id: dest_id})
             i++;
         }
-
-            // if (attractions.length > 0) {
-            //     await Promise.all(
-            //         attractions.map(async (attraction) => {
-            //             await Attraction.create(attraction)
-            //         })
-            //     )
-            // }
 
         if (attractions && Array.isArray(attractions)) {
             await Promise.all(
