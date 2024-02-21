@@ -221,7 +221,7 @@ class TourController {
     deleteTour = async (req, res, next) => {
         try {
             const tour_id = req.params.tour_id
-            const tour = await Tour.findByPk({ where : { tour_id }})
+            const tour = await Tour.findOne({ where : { tour_id }})
             if (!tour) return res.status(404).json({ Message: "Not found tour!"})
             tour.status = StatusTour.DELETED
             await tour.save()
