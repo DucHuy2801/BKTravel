@@ -6,6 +6,8 @@ const sequelize = require("../database/index")
 const Order = require("./order.model");
 const Destination = require("./destination.model");
 
+const { StatusTour } = require("../common/status")
+
 class Tour extends Model {}
 Tour.init({
     tour_id: {
@@ -25,6 +27,10 @@ Tour.init({
         type: DataTypes.TEXT,
         allowNull: true
     },
+    status: {
+        type: DataTypes.ENUM(StatusTour.WAITING, StatusTour.ONLINE, StatusTour.DELETED),
+        defaultValue: StatusTour.WAITING,
+    }, 
     current_customers: {
         type: DataTypes.INTEGER,
         allowNull: false
