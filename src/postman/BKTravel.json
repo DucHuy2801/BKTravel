@@ -390,7 +390,7 @@
 		{
 			"name": "Upload cover image",
 			"request": {
-				"method": "PUT",
+				"method": "POST",
 				"header": [
 					{
 						"key": "Authorization",
@@ -435,7 +435,7 @@
 		{
 			"name": "Upload avatar",
 			"request": {
-				"method": "PUT",
+				"method": "POST",
 				"header": [
 					{
 						"key": "Authorization",
