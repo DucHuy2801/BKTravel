@@ -10,14 +10,15 @@ const { checkExistDestination } = require("../services/destination.service")
 const { checkExistAttraction } = require("../services/attraction.service")
 const Attraction = require("../models/attraction.model")
 const { StatusTour } = require("../common/status")
+const { findTourById } = require("../services/tour.service")
 
 const slugify = (text) => {
     return text.toString().toLowerCase()
-        .replace(/\s+/g, '-')           // Replace space by -
-        .replace(/[^\w\-]+/g, '')       // Loại bỏ ký tự không phải chữ cái, số, gạch ngang
-        .replace(/\-\-+/g, '-')         // Thay thế nhiều dấu gạch ngang liên tiếp bằng một dấu gạch ngang
-        .replace(/^-+/, '')             // Loại bỏ dấu gạch ngang ở đầu chuỗi
-        .replace(/-+$/, '');            // Loại bỏ dấu gạch ngang ở cuối chuỗi
+        .replace(/\s+/g, '-')           
+        .replace(/[^\w\-]+/g, '')       
+        .replace(/\-\-+/g, '-')        
+        .replace(/^-+/, '')            
+        .replace(/-+$/, '');          
 };
 
 class TourController {
@@ -87,17 +88,39 @@ class TourController {
 
     updateTour = async (req, res, next) => {
         const tour_id = req.params.tour_id;
-        const updated_tour = req.body;
 
-        const tour = await Tour.findOne({ where: { tour_id }})
-        if (!tour) return res.status(404).json({ Message: "Not found tour"})
+        try {
+            const tour = await findTourById(tour_id)
+            if (!tour) return res.status(404).json({ Message: "Not found tour"})
+            
+            if (req.files.cover_image.path) {
+                const link_cover_image = await cloudinary.uploader.upload(req.files.cover_image.path)
 
-        const result = await Tour.update(updated_tour, {
-            where: { tour_id }
-        })
-        if (!result) 
-            return res.status(400).json({ Message: "Update fail!"})
-        return res.status(200).json({Message: "Update tour successfully!"})
+                tour.cover_image = link_cover_image.secure_url
+                await tour.save()
+            }
+        } catch (error) {
+            return res.status(500).json({ message: error.message })
+        }
+        // const tour = await findTourById(tour_id)
+        // if (!tour) return res.status(404).json({ Message: "Not found tour"})
+
+        // const result = await Tour.update(updated_tour, {
+        //     where: { tour_id }
+        // })
+        // if (!result) 
+        //     return res.status(400).json({ Message: "Update fail!"})
+        // return res.status(200).json({Message: "Update tour successfully!"})
+    }
+
+    updateCoverImageTour = async(req, res, next) => {
+        const tour_id = req.params.tour_id
+        try {
+            const tour = await findTourById(tour_id)
+            if (!tour) return res.status(404).json({ message: "Not found tour" })
+        } catch (error) {
+            return res.status(500).json({ message: error.message })
+        }
     }
 
     getTour = async (req, res, next) => {
@@ -119,8 +142,6 @@ class TourController {
             const attractions = await Attraction.findAll({
                 where: { destination_id: exist_tour.destination_id }
             })
-
-            console.log(`attractions`, attractions)
 
             const tour = {
                 name: exist_tour?.name ?? null,
@@ -213,6 +234,19 @@ class TourController {
             return res.status(200).json({
                 tours: tours
             })
+        } catch (error) {
+            return res.status(500).json({ message: error.message })
+        }
+    }
+
+    recoverTour = async(req, res, next) => {
+        try {
+            const tour_id = req.params.tour_id
+            const tour = await Tour.findOne({ where : { tour_id }})
+            if (!tour) return res.status(404).json({ Message: "Not found tour!"})
+            tour.status = StatusTour.WAITING
+            await tour.save()
+            return res.status(200).json({ message: "Recover tour successfully"})
         } catch (error) {
             return res.status(500).json({ message: error.message })
         }

@@ -15,6 +15,7 @@ router.get("/all/online", asyncHandler(tourController.getOnlineTours))
 router.get("/search", tourController.searchTour)
 router.get("/:tour_id", asyncHandler(tourController.getTour))
 router.put("/:tour_id", asyncHandler(tourController.updateTour))
+router.put("/recover/:tour_id", asyncHandler(tourController.recoverTour))
 router.delete("/:tour_id", asyncHandler(tourController.deleteTour))
 
 module.exports = router
