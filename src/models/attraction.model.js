@@ -15,6 +15,10 @@ Attraction.init({
         type: DataTypes.STRING,
         allowNull: false
     },
+    image: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
     address: {
         type: DataTypes.TEXT,
         allowNull: true
