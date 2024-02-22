@@ -17,7 +17,7 @@ Attraction.init({
     },
     image: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: null
     },
     address: {
         type: DataTypes.TEXT,
