@@ -85,15 +85,16 @@ class UserController {
         const email = req.body.email;
         const old_password = req.body.old_password;
         const new_password = req.body.new_password;
-        const confirm_password = req.body.new_password;
+        const confirm_password = req.body.confirm_password;
 
         const user = await User.findOne({ where: { email }})
         if (!user) 
             return res.status(404).json({ Message: "Not found user!" })
 
-        const match = bcrypt.compareSync(old_password, user.password)
+        const match = await bcrypt.compareSync(old_password, user.password);
+
         if (!match)
-            return res.status(400).json({ Message: "Password is wronng!" }) 
+            return res.status(400).json({ Message: "Password is wrong!" }) 
 
         if (confirm_password !== new_password) 
             return res.status(500).json({ Message: "Password doesn't match!"})
@@ -103,7 +104,7 @@ class UserController {
             { where: { email }}
         )
         if (!update_password) return res.status(500).json({Message: "Change password fail!"})
-        return res.status(200).json
+        return res.status(200).json({ message: "Change password successfully!" })
     }
 
     forgotPassword = async (req, res, next) => {
@@ -165,6 +166,7 @@ class UserController {
         
     }
 
+    // =========================
     addTourToWishlist = async (req, res, next) => {
         const user_id = req.params.user_id
         const tour_id = req.params.tour_id
