@@ -16,7 +16,7 @@ router.get("/search", tourController.searchTour)
 router.get("/:tour_id", asyncHandler(tourController.getTour))
 router.put("/:tour_id", asyncHandler(tourController.updateTour))
 router.put("/recover/:tour_id", asyncHandler(tourController.recoverTour))
-router.put("/upload/:tour_id", asyncHandler(tourController.updateCoverImageTour))
+router.post("/upload/:tour_id", asyncHandler(tourController.updateCoverImageTour))
 router.delete("/:tour_id", asyncHandler(tourController.deleteTour))
 
 module.exports = router
