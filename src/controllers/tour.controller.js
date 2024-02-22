@@ -11,6 +11,7 @@ const { checkExistAttraction } = require("../services/attraction.service")
 const Attraction = require("../models/attraction.model")
 const { StatusTour } = require("../common/status")
 const { findTourById } = require("../services/tour.service")
+const { link } = require("fs")
 
 const slugify = (text) => {
     return text.toString().toLowerCase()
@@ -93,24 +94,24 @@ class TourController {
             const tour = await findTourById(tour_id)
             if (!tour) return res.status(404).json({ Message: "Not found tour"})
             
+            const data = req.fields;
+            const updated_tour = await Tour.update(data, {
+                where: { tour_id: tour_id }
+            })
+            
             if (req.files.cover_image.path) {
                 const link_cover_image = await cloudinary.uploader.upload(req.files.cover_image.path)
-
                 tour.cover_image = link_cover_image.secure_url
                 await tour.save()
-            }
+            } 
+
+            return res.status(200).json({
+                message: "Update tour successfully!",
+                updated_tour: await Tour.findOne({ where: { tour_id }})
+            })
         } catch (error) {
             return res.status(500).json({ message: error.message })
         }
-        // const tour = await findTourById(tour_id)
-        // if (!tour) return res.status(404).json({ Message: "Not found tour"})
-
-        // const result = await Tour.update(updated_tour, {
-        //     where: { tour_id }
-        // })
-        // if (!result) 
-        //     return res.status(400).json({ Message: "Update fail!"})
-        // return res.status(200).json({Message: "Update tour successfully!"})
     }
 
     updateCoverImageTour = async(req, res, next) => {
@@ -118,6 +119,15 @@ class TourController {
         try {
             const tour = await findTourById(tour_id)
             if (!tour) return res.status(404).json({ message: "Not found tour" })
+
+            const cover_image = req.files.cover_image.path
+            const link_image = await cloudinary.uploader.upload(cover_image)
+            tour.cover_image = link_image.secure_url
+            await tour.save()
+            return res.status(200).json({
+                message: "Upload cover image successfully!",
+                link_image: link_image.secure_url
+            })
         } catch (error) {
             return res.status(500).json({ message: error.message })
         }
