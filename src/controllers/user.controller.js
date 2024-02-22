@@ -10,6 +10,9 @@ const { isExpired } = require("../utils/checkExpire")
 const Wishlist = require("../models/wishlist.model")
 const Tour = require("../models/tour.model")
 const Order = require("../models/order.model")
+const WishlistTour = require("../models/wishlist_tour.model")
+const { findUserById } = require("../services/user.service")
+const { findTourById } = require("../services/tour.service")
 
 class UserController {
 
@@ -166,17 +169,18 @@ class UserController {
         
     }
 
-    // =========================
     addTourToWishlist = async (req, res, next) => {
-        const user_id = req.params.user_id
-        const tour_id = req.params.tour_id
-
+        const { tour_id, user_id } = req.params
         try {
             const existWishlist = await Wishlist.findOne({
                 where: {
-                    user_id: user_id,
-                    tour_id: tour_id
-                }
+                   user_id: user_id
+                }, include: [{
+                    model: Tour,
+                    where: {
+                        tour_id: tour_id
+                    }
+                }]
             })
 
             if (existWishlist) {
@@ -184,15 +188,14 @@ class UserController {
                     message: "Tour already exists in the wishlist!"
                 })
             }
-
-            const added_tour = await Wishlist.create({
-                user_id: user_id,
+            const new_wishlist = await WishlistTour.create({
+                wishlist_id: user_id,
                 tour_id: tour_id
             })
 
             return res.status(201).json({
                 message: "Add tour to wishlist successfully!",
-                added_tour: added_tour
+                wishlist: new_wishlist
             })
         } catch (error) {
             return res.status(500).json({
@@ -202,43 +205,68 @@ class UserController {
     }
 
     getWishlistByCustomer = async (req, res, next) => {
-        const user_id = req.params.user_id
-
-        const user = await User.findByPk(user_id, {
-            include: {
-                model: Tour,
-                through: Wishlist
-            }
-        })
-
-        if (user) {
-            const favor_tours = user.Tours
-            return res.status(200).json({ 
-                message: "Get wishlist successfully",
-                data: favor_tours
-            })
-        }
+        const user_id = req.params.user_id;
     
-        else {
-            return res.status(404).json({
-                message: "Not found user!"
+        try {
+            const user = await findUserById(user_id)
+            if (!user) {
+                return res.status(404).json({ message: "Not found user" });
+            }
+    
+            const wishlist = await WishlistTour.findAll({
+                where: {
+                    wishlist_id: user_id
+                }
             })
+            console.log("1", wishlist)
+
+            const tour_ids = wishlist.map((wishlist_tour) => wishlist_tour.dataValues.tour_id)
+            const tours = await Tour.findAll({
+                where: {
+                    tour_id: tour_ids
+                }
+            })
+            return res.status(200).json({
+                message: "Get wishlist successfully",
+                data: tours,
+            });
+        } catch (error) {
+            return res.status(500).json({ message: error.message });
         }
-        
-    }
+    };    
 
     removeTourFromWishlist = async (req, res, next) => {
+        const { tour_id, user_id } = req.params;
+        try {
+            const user = await findUserById(user_id)
+            if (!user) return res.status(404).json({ message: "Not found user!" })
 
+            const tour = await findTourById(tour_id)
+            if (!tour) return res.status(404).json({ message: "Not found tour!" })
+
+            const wishlist = await WishlistTour.findOne({
+                where: {
+                    wishlist_id: user_id,
+                    tour_id: tour_id
+                }
+            })
+            if (!wishlist) return res.status(404).json({ message: "Tour not found in the wishlist!" })
+            await wishlist.destroy()
+            return res.status(200).json({
+                message: "Remove tour from wishlist successfully!"
+            })
+        } catch (error) {
+            return res.status(500).json({ message: error.message })
+        }
     }
 
-    // not complete
     addTourToOrder = async (req, res, next) => {
         const { tour_id, user_id } = req.params
         const tour = Tour.findByPk(tour_id)
         if (!tour) 
             return res.status(404).json({ message: "Not found tour!"})
         
-        const user = User.findByPk(user_id)
+        const user = await findUserById(tour_id)
         if (!user) 
             return res.status(404).json({ message: "Not found user!"})
 
