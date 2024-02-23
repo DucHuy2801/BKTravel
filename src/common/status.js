@@ -4,6 +4,13 @@ const StatusTour = {
     DELETED: 'deleted'
 }
 
+const StatusOrder = {
+    CANCEL: 'Hủy',
+    NOT_PAYMENT: 'Chưa thanh toán',
+    PAYMENT: 'Đã thanh toán'
+}
+
 module.exports = {
-    StatusTour
+    StatusTour,
+    StatusOrder
 }
