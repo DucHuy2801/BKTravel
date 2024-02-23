@@ -167,6 +167,7 @@ class TourController {
                         name: attraction.name,
                     })),
                 },
+                time: exist_tour.time,
                 departure_time: exist_tour.departure_time,
                 deadline_book_time: exist_tour.deadline_book_time,
                 price: exist_tour.price,
