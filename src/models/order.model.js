@@ -1,11 +1,6 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../database/index");
-
-const statusOrder = {
-    CANCEL: 'Hủy',
-    NOT_PAYMENT: 'Chưa thanh toán',
-    PAYMENT: 'Đã thanh toán'
-}
+const { StatusOrder } = require("../common/status");
 
 class Order extends Model {}
 
@@ -16,20 +11,12 @@ Order.init(
             primaryKey: true,
             autoIncrement: true,
         },
-        user_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        tour_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
         time: {
             type: DataTypes.DATE,
             allowNull: false
         },
         status: {
-            type: DataTypes.ENUM(statusOrder.CANCEL, statusOrder.NOT_PAYMENT, statusOrder.PAYMENT),
+            type: DataTypes.ENUM(StatusOrder.CANCEL, StatusOrder.NOT_PAYMENT, StatusOrder.PAYMENT),
             allowNull: false
         },
         total: {
@@ -38,7 +25,5 @@ Order.init(
         }
     }, { sequelize, modelName: 'order' }
 );
-
-
 
 module.exports = Order;
