@@ -6,6 +6,11 @@ const Tour = require("./tour.model")
 const Location = require("./location")
 
 const TourLocation = sequelize.define("tour_location", {
+    tour_location_id: {
+        type: DataTypes.INIEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     tour_id: {
         type: DataTypes.INTEGER,
         allowNull: false,

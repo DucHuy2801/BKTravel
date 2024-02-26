@@ -11,6 +11,7 @@ const Wishlist = require("../models/wishlist.model")
 const Tour = require("../models/tour.model")
 const Order = require("../models/order.model")
 const WishlistTour = require("../models/wishlist_tour.model")
+const OrderTour = require("../models/order_tour.model")
 const { findUserById } = require("../services/user.service")
 const { findTourById } = require("../services/tour.service")
 
@@ -262,23 +263,37 @@ class UserController {
 
     addTourToOrder = async (req, res, next) => {
         const { tour_id, user_id } = req.params
-        const tour = Tour.findByPk(tour_id)
-        if (!tour) 
-            return res.status(404).json({ message: "Not found tour!"})
-        
-        const user = await findUserById(tour_id)
-        if (!user) 
-            return res.status(404).json({ message: "Not found user!"})
+        try {
+            // const existOrder = await Order.findOne({
+            //     where: {
+            //        user_id: user_id
+            //     }, include: [{
+            //         model: Tour,
+            //         where: {
+            //             tour_id: tour_id
+            //         }
+            //     }]
+            // })
 
-        const newOrder = await Order.create({
-            user_id: user_id,
-            tour_id: tour_id,
-        })
+            // if (existOrder) {
+            //     return res.status(400).json({
+            //         message: "Tour already exists in the wishlist!"
+            //     })
+            // }
+            const new_order = await OrderTour.create({
+                order_id: user_id,
+                tour_id: tour_id
+            })
 
-        if (!newOrder) 
-            return res.status(400).json({ message: "Can't add tour to order!"})
-        
-        return res.status(200).json({ message: "Add tour to order successfully!"})
+            return res.status(201).json({
+                message: "Add tour to order successfully!",
+                wishlist: new_order
+            })
+        } catch (error) {
+            return res.status(500).json({
+                message: error.message
+            })
+        }
     }
 
     getAllToursFromOrder = async (req, res, next) => {

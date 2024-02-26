@@ -7,7 +7,6 @@ const Order = require("./order.model");
 const Destination = require("./destination.model");
 
 const { StatusTour } = require("../common/status");
-const Wishlist = require("./wishlist.model");
 
 class Tour extends Model {}
 Tour.init({

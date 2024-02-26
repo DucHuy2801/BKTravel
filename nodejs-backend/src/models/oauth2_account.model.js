@@ -14,8 +14,8 @@ const OAuth2Account = sequelize.define("oauth2_account", {
         autoIncrement: true,
         primaryKey: true
     },
-    account_id: {
-        type: DataTypes.BIGINT,
+    google_id: {
+        type: DataTypes.STRING,
         allowNull: false
     },
     email: {
@@ -31,6 +31,14 @@ const OAuth2Account = sequelize.define("oauth2_account", {
         type: DataTypes.STRING,
         allowNull: false
     },
+    first_name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    last_name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     avatar: {
         type: DataTypes.TEXT,
         allowNull: false
@@ -39,14 +47,3 @@ const OAuth2Account = sequelize.define("oauth2_account", {
 
 module.exports = OAuth2Account
 
-// OAuth2Account.init({
-//     account_id: {
-//         type: DataTypes.BIGINT,
-//         allowNull: false
-//     },
-//     provider: {
-//         type: DataTypes.ENUM(ProviderAccount.FACEBOOK, ProviderAccount.GOOGLE),
-//         allowNull: false
-//     },
-// }, { sequelize, modelName: 'oauth2_account'}
-// )

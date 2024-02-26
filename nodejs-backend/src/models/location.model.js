@@ -2,15 +2,12 @@
 
 const { DataTypes } = require("sequelize")
 const sequelize = require("../database/index")
+const Tour = require("./tour.model")
 
 const Location = sequelize.define("location", {
     location_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        allowNull: false
-    },
-    name: {
-        type: DataTypes.STRING,
         allowNull: false
     },
     province: {
@@ -19,15 +16,15 @@ const Location = sequelize.define("location", {
     },
     country: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: null
     },
     image: {
         type: DataTypes.TEXT,
-        allowNull: true
+        allowNull: null
     },
     description: {
         type: DataTypes.TEXT,
-        allowNull: true
+        allowNull: null
     }
 
 })

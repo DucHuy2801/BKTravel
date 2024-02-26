@@ -7,6 +7,7 @@ const { findUserByEmail } = require("../services/user.service")
 const authService = require("../services/auth.service")
 const querystring = require("querystring")
 const { createAccessToken, createRefreshToken } = require("../services/auth.service")
+const passport = require("passport")
 
 const redirectURI = "auth/google";
 
@@ -152,7 +153,12 @@ class AuthController {
         })
     }   
 
-    oauth2GoogleCallback = async (req, res) => {
+    oauth2GoogleCallback = async (req, res, next) => {
+        passport.authenticate('google', (err, profile) => {
+            req.user = profile
+            next()
+        }) 
+        return res.redirect(`${process.env.URL_CLIENT}/auth/login-success/${req.user?.id}`)
     }
 
 }

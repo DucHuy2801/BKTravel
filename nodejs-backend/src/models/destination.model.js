@@ -2,11 +2,12 @@
 
 const { DataTypes, Model } = require("sequelize")
 const sequelize = require("../database/index")
+const Attraction = require("./attraction.model")
 
-class Attraction extends Model {}
+class Destination extends Model {}
 
-Attraction.init({
-    attraction_id: {
+Destination.init({
+    destination_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
@@ -15,14 +16,12 @@ Attraction.init({
         type: DataTypes.STRING,
         allowNull: false
     },
-    image: {
-        type: DataTypes.TEXT,
-        allowNull: null
-    },
-    address: {
-        type: DataTypes.TEXT,
+    country: {
+        type: DataTypes.STRING,
         allowNull: true
     }
-}, { sequelize, modelName: 'attraction' })
+}, { sequelize, modelName: 'destination' })
 
-module.exports = Attraction;
+module.exports = Destination
+
+Destination.hasMany(Attraction, { foreignKey: 'destination_id' })
