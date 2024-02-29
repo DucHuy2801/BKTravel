@@ -5,12 +5,14 @@ const cloudinary = require("../utils/cloudinary")
 const Tour = require("../models/tour.model")
 const Sequelize = require("sequelize")
 const Destination = require("../models/destination.model")
+const DestinationTour = require("../models/destination_tour.model")
 const Op = Sequelize.Op
 const { checkExistDestination } = require("../services/destination.service")
 const { checkExistAttraction } = require("../services/attraction.service")
 const Attraction = require("../models/attraction.model")
 const { StatusTour } = require("../common/status")
-const { findTourById } = require("../services/tour.service")
+const { findTourById, findIdByNameTour } = require("../services/tour.service")
+const AttractionTour = require("../models/attraction_tour.model")
 
 const slugify = (text) => {
     return text.toString().toLowerCase()
@@ -25,122 +27,98 @@ const slugify = (text) => {
 class TourController {
 
     createTour = async (req, res, next) => {
-        // const access_token = req.headers['authorization']
-        // const decodeUser = jwt.decode(access_token)
-        // const role_user = decodeUser['role_user']
-        // if (role_user !== 'admin') 
-        //     return res.status(401).json({ Message: "Unauthorized for creating tour!"})
-        
-        const { name, max_customer, departure_date, departure_time, departure_place, destination_place,
-                time, price, highlight, note, description, deadline_book_time } = req.fields; 
-        
-        const exist_destination = await checkExistDestination(destination_place);
-        let dest_id
-        if (!exist_destination) {
-            const new_destination = await Destination.create({
-                name: destination_place
-            })
-
-            dest_id = new_destination.destination_id;
-        } else {
-            dest_id = exist_destination.destination_id
-        }
-
-        let attractions = []
-        let i = 0;
-        while (req.fields[`attractions[${i}][name]`]) {
-            const attraction_name = req.fields[`attractions[${i}][name]`]
-            const exist_attraction = await checkExistAttraction(attraction_name, dest_id)
-            if (!exist_attraction) {
-                attractions.push({ name: attraction_name, destination_id: dest_id})
-            }
-            i++;
-        }
-
-        if (attractions && Array.isArray(attractions)) {
-            await Promise.all(
-                    attractions.map(async (attraction) => {
-                    const { name, address } = attraction;
-                    await Attraction.create(
-                        { name, address, destination_id: dest_id },
-                    );
-                })
-            );
-        }
-        
-        const result = req.files.cover_image.path
-        const link_cover_image = await cloudinary.uploader.upload(result)
-
-        const newTour = await Tour.create({
-            name, max_customer, departure_date, departure_time, departure_place, destination_place,
-            time, price, highlight, note, description, deadline_book_time, destination_id: dest_id,
-            cover_image: link_cover_image.secure_url, current_customers: 0
-        },)
-
-        
-
-        if (!newTour)
-            return res.status(400).json({ message: "Create tour fail!" })
-
-        return res.status(200).json({
-            message: "Create tour successfully!",
-            data: newTour
-        })
-    }
-
-    // not done
-    create_tour = async (req, res, next) => {
         try {
-            const destinationNames = req.fields.destinations || [];
-            const attractions = req.fields.attractions || [];
-
-            // check or create destination
-            const destinationPromises = destinationNames.map(async (name) => {
-                const exist_des = await checkExistDestination(name);
-                if (!exist_des) {
-                    return await Destination.create({ name });
-                }
-                return exist_des;
-            });
-
-            const destinations = await Promise.all(destinationPromises);
-
-            // create attractiosn for each destination
-            const attractionPromises = attractions.map(async (attraction) => {
-                const destination_id = attraction.destination_id;
-    
-                const exist_attraction = await checkExistAttraction(attraction.name, destination_id);
-    
-                if (!exist_attraction) {
-                    return Attraction.create({
-                        name: attraction.name,
-                        address: attraction.address,
-                        destination_id: destination_id
-                    });
-                }
-    
-                return exist_attraction;
-            });
-    
-            const createdAttractions = await Promise.all(attractionPromises);
-
-            const { name, max_customer, departure_date, departure_time, departure_place,
+            const { name, max_customer, departure_date, departure_time, departure_place, destination_places,
                 time, price, highlight, note, description, deadline_book_time } = req.fields; 
+            const destinations = destination_places.split(',').map(destination => destination.trim())
 
+            // create destination if it not exist
+            for (let i = 0; i < destinations.length ; i++) {
+                const exist_dest = await Destination.findOne({
+                    where: { name: destinations[i] }
+                })
+                if (!exist_dest) await Destination.create({ name: destinations[i] })
+            }
+
+            // get and create attractions of destination
+            for (let i = 0; i < destinations.length ; i++) {
+                let attractions = []
+                let k = 0;
+                const destination = await Destination.findOne({ 
+                    where: { name: destinations[i]}
+                })
+                while (req.fields[`attractions[${k}][${destinations[i]}]`]) {
+                    const attraction_name = req.fields[`attractions[${k}][${destination.name}]`]
+                    const exist_attraction = await checkExistAttraction(attraction_name, destination.destination_id)
+                    if (!exist_attraction) {
+                        attractions.push({ name: attraction_name, destination_id: destination.destination_id})
+                    }
+                    k++;
+                }
+                if (attractions && Array.isArray(attractions)) {
+                    await Promise.all(
+                            attractions.map(async (attraction) => {
+                            const { name, address } = attraction;
+                            await Attraction.create(
+                                { name, address, destination_id: destination.destination_id },
+                            );
+                        })
+                    );
+                }
+            }
+            
+            // upload cover image of tour
             const result = req.files.cover_image.path
             const link_cover_image = await cloudinary.uploader.upload(result)
-        
+
+            // create tour
             const newTour = await Tour.create({
-                name, max_customer, departure_date, departure_time, departure_place,
-                time, price, highlight, note, description, deadline_book_time, destination_id: dest_id,
+                name, max_customer, departure_date, departure_time, departure_place, destination_place: destination_places,
+                time, price, highlight, note, description, deadline_book_time, 
                 cover_image: link_cover_image.secure_url, current_customers: 0
             })
+
+            // create destination-tour table
+            for (let i = 0; i < destinations.length; i++) {
+                await DestinationTour.create({
+                    tour_id: newTour.tour_id,
+                    destination_id: (await Destination.findOne({
+                        where: { name: destinations[i]}
+                    })).destination_id
+                })
     
-        } catch(err) {
+                // create attraction-tour table
+                const dest_id = (await Destination.findOne({
+                    where: { name: destinations[i]}
+                })).destination_id
+
+                const attractions = await Attraction.findAll({
+                    where: { destination_id: dest_id }
+                })
+
+                const list_attraction = await attractions.map(attraction => ({
+                    attraction_id: attraction.attraction_id
+                }))
+
+                for(let k = 0; k < list_attraction.length; k++) {
+                    await AttractionTour.create({
+                        tour_id: newTour.tour_id,
+                        attraction_id: list_attraction[k]['attraction_id']
+                    })
+                }
+                    
+            }
+
+            return res.status(201).json({ 
+                data: newTour,
+                message: "Create tour successfully!" 
+            })
+        } catch (error) {
             return res.status(500).json({ message: error.message })
         }
     }
 
+    // not complete
     updateTour = async (req, res, next) => {
         const tour_id = req.params.tour_id;
 
@@ -207,6 +185,8 @@ class TourController {
                 where: { destination_id: exist_tour.destination_id }
             })
 
+            // const list_attraction_id = await De
+
             const tour = {
                 name: exist_tour?.name ?? null,
                 cover_image: exist_tour.cover_image,
@@ -215,12 +195,13 @@ class TourController {
                 max_customer: exist_tour.max_customer,
                 departure_place: exist_tour.departure_place,
                 departure_date: exist_tour.departure_date,
-                destination: {
-                    name: exist_tour.destination_place,
-                    attractions: attractions.map(attraction => ({
-                        name: attraction.name,
-                    })),
-                },
+                // destination: {
+                //     name: exist_tour.destination_place,
+                //     attractions: attractions.map(attraction => ({
+                //         name: attraction.name,
+                //     })),
+                // },
+                destinations: exist_tour.destination_place,
                 time: exist_tour.time,
                 departure_time: exist_tour.departure_time,
                 deadline_book_time: exist_tour.deadline_book_time,
