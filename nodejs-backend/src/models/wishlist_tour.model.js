@@ -7,18 +7,18 @@ const Tour = require('./tour.model');
 
 class WishlistTour extends Model {}
 WishlistTour.init({
-    wishlist_tour_id: {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
     },
     wishlist_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     tour_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     }
 }, { sequelize, modelName: "wishlist_tour" })
 
