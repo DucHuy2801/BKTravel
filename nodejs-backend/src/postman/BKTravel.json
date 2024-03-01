@@ -557,8 +557,8 @@
 							"src": "postman-cloud:///1eebc125-0093-4d00-89f3-9bedc2c1b433"
 						},
 						{
-							"key": "destination_place",
-							"value": "Đà Nẵng",
+							"key": "destination_places",
+							"value": "Huế, Khánh Hòa",
 							"type": "text"
 						},
 						{
@@ -587,23 +587,23 @@
 							"type": "text"
 						},
 						{
-							"key": "attractions[0][name]",
-							"value": "Đá Mỹ Nghệ Non Nước",
+							"key": "attractions[0][Huế]",
+							"value": "Cố đô",
 							"type": "text"
 						},
 						{
-							"key": "attractions[1][name]",
-							"value": "Chùa Linh Ứng Bãi Bụt Đà Nẵng",
+							"key": "attractions[1][Huế]",
+							"value": "Nhã nhạc cung đình Huế",
 							"type": "text"
 						},
 						{
-							"key": "attractions[2][name]",
-							"value": "Chợ Hàn",
+							"key": "attractions[0][Khánh Hòa]",
+							"value": "Biển nha trang",
 							"type": "text"
 						},
 						{
-							"key": "attractions[3][name]",
-							"value": "Thuận Phước Bridge",
+							"key": "attractions[1][Khánh Hòa]",
+							"value": "Đảo Bình Ba",
 							"type": "text"
 						}
 					]
@@ -1006,7 +1006,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/tour/7",
+					"raw": "http://localhost:8080/api/v1/tour/12",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -1016,7 +1016,7 @@
 						"api",
 						"v1",
 						"tour",
-						"7"
+						"12"
 					]
 				}
 			},
