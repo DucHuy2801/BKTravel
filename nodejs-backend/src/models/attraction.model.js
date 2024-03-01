@@ -22,6 +22,10 @@ Attraction.init({
     address: {
         type: DataTypes.TEXT,
         allowNull: true
+    },
+    description: {
+        type: DataTypes.TEXT,
+        allowNull: true
     }
 }, { sequelize, modelName: 'attraction' })
 
