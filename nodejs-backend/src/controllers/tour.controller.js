@@ -11,7 +11,7 @@ const { checkExistDestination } = require("../services/destination.service")
 const { checkExistAttraction } = require("../services/attraction.service")
 const Attraction = require("../models/attraction.model")
 const { StatusTour } = require("../common/status")
-const { findTourById, findIdByNameTour } = require("../services/tour.service")
+const { findTourById } = require("../services/tour.service")
 const AttractionTour = require("../models/attraction_tour.model")
 
 const slugify = (text) => {
@@ -28,92 +28,92 @@ class TourController {
 
     createTour = async (req, res, next) => {
         try {
-            const { name, max_customer, departure_date, departure_time, departure_place, destination_places,
-                time, price, highlight, note, description, deadline_book_time } = req.fields; 
-            const destinations = destination_places.split(',').map(destination => destination.trim())
-
-            // create destination if it not exist
-            for (let i = 0; i < destinations.length ; i++) {
-                const exist_dest = await Destination.findOne({
-                    where: { name: destinations[i] }
-                })
-                if (!exist_dest) await Destination.create({ name: destinations[i] })
+            const {
+                name,
+                max_customer,
+                departure_date,
+                departure_time,
+                departure_place,
+                destination_places,
+                time,
+                price,
+                highlight,
+                note,
+                description,
+                deadline_book_time,
+            } = req.fields;
+        
+            const destinations = destination_places.split(',').map(destination => destination.trim());
+        
+            // Create destinations if they don't exist
+            for (const dest of destinations) {
+                const [destination, created] = await Destination.findOrCreate({
+                    where: { name: dest },
+                    defaults: { name: dest },
+                });
             }
+        
+            // Create attractions and associate them with destinations
+            for (const dest of destinations) {
+                const destination = await Destination.findOne({ where: { name: dest } });
 
-            // get and create attractions of destination
-            for (let i = 0; i < destinations.length ; i++) {
-                let attractions = []
-                let k = 0;
-                const destination = await Destination.findOne({ 
-                    where: { name: destinations[i]}
-                })
-                while (req.fields[`attractions[${k}][${destinations[i]}]`]) {
-                    const attraction_name = req.fields[`attractions[${k}][${destination.name}]`]
-                    const exist_attraction = await checkExistAttraction(attraction_name, destination.destination_id)
-                    if (!exist_attraction) {
-                        attractions.push({ name: attraction_name, destination_id: destination.destination_id})
-                    }
-                    k++;
-                }
-                if (attractions && Array.isArray(attractions)) {
-                    await Promise.all(
-                            attractions.map(async (attraction) => {
-                            const { name, address } = attraction;
-                            await Attraction.create(
-                                { name, address, destination_id: destination.destination_id },
-                            );
-                        })
-                    );
+                for (let k = 0; req.fields[`attractions[${k}][${dest}]`]; k++) {
+                    const attraction_name = req.fields[`attractions[${k}][${dest}]`];
+                    const [attraction, created] = await Attraction.findOrCreate({
+                        where: { name: attraction_name, destination_id: destination.destination_id },
+                        defaults: { name: attraction_name, destination_id: destination.destination_id },
+                    });
                 }
             }
-            
-            // upload cover image of tour
-            const result = req.files.cover_image.path
-            const link_cover_image = await cloudinary.uploader.upload(result)
-
-            // create tour
+        
+            // Upload cover image of the tour
+            const result = req.files.cover_image.path;
+            const link_cover_image = await cloudinary.uploader.upload(result);
+        
+            // Create the tour
             const newTour = await Tour.create({
-                name, max_customer, departure_date, departure_time, departure_place, destination_place: destination_places,
-                time, price, highlight, note, description, deadline_book_time, 
-                cover_image: link_cover_image.secure_url, current_customers: 0
-            })
-
-            // create destination-tour table
-            for (let i = 0; i < destinations.length; i++) {
+                name,
+                max_customer,
+                departure_date,
+                departure_time,
+                departure_place,
+                destination_place: destination_places,
+                time,
+                price,
+                highlight,
+                note,
+                description,
+                deadline_book_time,
+                cover_image: link_cover_image.secure_url,
+                current_customers: 0,
+            });
+        
+            // Associate destinations with the tour
+            for (const dest of destinations) {
+                const destination = await Destination.findOne({ where: { name: dest } });
+        
                 await DestinationTour.create({
                     tour_id: newTour.tour_id,
-                    destination_id: (await Destination.findOne({
-                        where: { name: destinations[i]}
-                    })).destination_id
-                })
-    
-                // create attraction-tour table
-                const dest_id = (await Destination.findOne({
-                    where: { name: destinations[i]}
-                })).destination_id
-
-                const attractions = await Attraction.findAll({
-                    where: { destination_id: dest_id }
-                })
-
-                const list_attraction = await attractions.map(attraction => ({
-                    attraction_id: attraction.attraction_id
-                }))
-
-                for(let k = 0; k < list_attraction.length; k++) {
+                    destination_id: destination.destination_id,
+                });
+        
+                // Associate attractions with the tour
+                const attractions = await Attraction.findAll({ where: { destination_id: destination.destination_id } });
+        
+                for (const attraction of attractions) {
                     await AttractionTour.create({
                         tour_id: newTour.tour_id,
-                        attraction_id: list_attraction[k]['attraction_id']
-                    })
+                        attraction_id: attraction.attraction_id,
+                    });
                 }
-                    
             }
-
-            return res.status(201).json({ 
+        
+            return res.status(201).json({
                 data: newTour,
-                message: "Create tour successfully!" 
-            })
-        } catch (error) {
+                message: 'Create tour successfully!',
+            });
+                    
+            } catch (error) {
             return res.status(500).json({ message: error.message })
         }
     }
@@ -168,50 +168,25 @@ class TourController {
     getTour = async (req, res, next) => {
         try {
             const tour_id = req.params.tour_id;
-            const exist_tour = await Tour.findByPk(tour_id, {
-                include: [
-                    {
-                        model: Destination,
-                        include: [{ 
-                            model: Attraction, 
-                            attributes: ['name'] 
-                        }],
-                    },
-                ],
-            });
-            if (!exist_tour) return res.status(404).json({ Message: "Not found tour" });
-
-            const attractions = await Attraction.findAll({
-                where: { destination_id: exist_tour.destination_id }
+            
+            const result = await Tour.findByPk(tour_id, {
+                include: [{
+                    model: Destination,
+                    as: "destinations",
+                    attributes: ["name"],
+                    include: [{
+                        model: Attraction,
+                        as: "attractions"
+                    }]
+                }, {
+                    model: Attraction,
+                    as: "attractions"
+                }]
             })
-
-            // const list_attraction_id = await De
-
-            const tour = {
-                name: exist_tour?.name ?? null,
-                cover_image: exist_tour.cover_image,
-                description_place: exist_tour.description_place,
-                current_customers: exist_tour.current_customers,
-                max_customer: exist_tour.max_customer,
-                departure_place: exist_tour.departure_place,
-                departure_date: exist_tour.departure_date,
-                // destination: {
-                //     name: exist_tour.destination_place,
-                //     attractions: attractions.map(attraction => ({
-                //         name: attraction.name,
-                //     })),
-                // },
-                destinations: exist_tour.destination_place,
-                time: exist_tour.time,
-                departure_time: exist_tour.departure_time,
-                deadline_book_time: exist_tour.deadline_book_time,
-                price: exist_tour.price,
-                highlight: exist_tour.highlight,
-                note: exist_tour.note,
-                description: exist_tour.description,
-            };
+            
             return res.status(200).json({
-                data: tour,
+                data: JSON.parse(JSON.stringify(result)),
+                message: "Get tour successfully!"
             });
         } catch (error) {
           return res.status(500).json({ message: error.message });
