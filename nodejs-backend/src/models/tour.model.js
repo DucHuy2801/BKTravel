@@ -86,7 +86,7 @@ Tour.init({
     }
 },  { sequelize, modelName: 'tour' })
 
-Tour.hasMany(Order, { foreignKey: 'tour_id' });
-Tour.belongsTo(Destination, { foreignKey: 'destination_id' })
+// Tour.hasMany(Order, { foreignKey: 'tour_id' });
+// Tour.belongsTo(Destination, { foreignKey: 'destination_id' })
 
 module.exports = Tour

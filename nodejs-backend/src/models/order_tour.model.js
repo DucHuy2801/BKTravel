@@ -1,35 +1,30 @@
 'use strict'
 
-const { DataTypes } = require("sequelize")
-const sequelize = require("../database/index")
-const User = require("./user.model")
-const Tour = require("./tour.model")
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../database/index');
+const Order = require('./order.model');
+const Tour = require('./tour.model');
 
-const OrderTour = sequelize.define("user_order", {
-    order_tour_id: {
+class OrderTour extends Model {}
+OrderTour.init({
+    id: {
         type: DataTypes.INTEGER,
+        primaryKey: true,
         autoIncrement: true,
-        primaryKey: true
-    },
-    user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: User,
-            key: 'user_id'
-        }
     },
     tour_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: Tour,
-            key: 'tour_id'
-        }
+        allowNull: true,
+    },
+    order_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
     }
-})  
+}, { sequelize, modelName: "wishlist_tour" })
 
-User.belongsToMany(Tour, { through: OrderTour })
-Tour.belongsToMany(User, { through: OrderTour })
+Order.belongsToMany(Tour, { through: OrderTour, foreignKey: "order_id" })
+Tour.belongsToMany(Order, { through: OrderTour, foreignKey: "tour_id" })
 
 module.exports = OrderTour
+
+

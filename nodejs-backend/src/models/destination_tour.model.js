@@ -7,19 +7,21 @@ const Destination = require("./destination.model")
 
 class DestinationTour extends Model {}
 DestinationTour.init({
-    destination_tour_id: {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
+        allowNull: false
     },
     tour_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     destination_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     }
+    
 }, { sequelize, modelName: "destination_tour" })
 
 Tour.belongsToMany(Destination, { through: DestinationTour, foreignKey: "tour_id" })

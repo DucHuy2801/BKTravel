@@ -19,9 +19,13 @@ Destination.init({
     country: {
         type: DataTypes.STRING,
         allowNull: true
+    },
+    description: {
+        type: DataTypes.TEXT,
+        allowNull: true
     }
 }, { sequelize, modelName: 'destination' })
 
-module.exports = Destination
 
 Destination.hasMany(Attraction, { foreignKey: 'destination_id' })
+module.exports = Destination
