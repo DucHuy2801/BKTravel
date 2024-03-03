@@ -558,7 +558,7 @@
 						},
 						{
 							"key": "destination_places",
-							"value": "Huế, Khánh Hòa",
+							"value": "Bình Định, Phú Yên",
 							"type": "text"
 						},
 						{
@@ -587,23 +587,23 @@
 							"type": "text"
 						},
 						{
-							"key": "attractions[0][Huế]",
-							"value": "Cố đô",
+							"key": "attractions[0][Phú Yên]",
+							"value": "Tháp Nghinh Phong",
 							"type": "text"
 						},
 						{
-							"key": "attractions[1][Huế]",
-							"value": "Nhã nhạc cung đình Huế",
+							"key": "attractions[1][Phú Yên]",
+							"value": "Xóm rế",
 							"type": "text"
 						},
 						{
-							"key": "attractions[0][Khánh Hòa]",
-							"value": "Biển nha trang",
+							"key": "attractions[0][Bình Định]",
+							"value": "Đập Đá",
 							"type": "text"
 						},
 						{
-							"key": "attractions[1][Khánh Hòa]",
-							"value": "Đảo Bình Ba",
+							"key": "attractions[1][Bình Định]",
+							"value": "Đa cua",
 							"type": "text"
 						}
 					]
@@ -1046,6 +1046,70 @@
 						"v1",
 						"tour",
 						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all destinations",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/destination/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"destination",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all attractions",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/attraction/all?destination=Bình Định",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"attraction",
+						"all"
+					],
+					"query": [
+						{
+							"key": "destination",
+							"value": "Bình Định"
+						}
 					]
 				}
 			},
