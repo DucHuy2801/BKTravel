@@ -7,6 +7,7 @@ const Order = require("./order.model");
 const Destination = require("./destination.model");
 
 const { StatusTour } = require("../common/status");
+const Schedule = require("./schedule.model");
 
 class Tour extends Model {}
 Tour.init({
@@ -86,7 +87,6 @@ Tour.init({
     }
 },  { sequelize, modelName: 'tour' })
 
-// Tour.hasMany(Order, { foreignKey: 'tour_id' });
-// Tour.belongsTo(Destination, { foreignKey: 'destination_id' })
+Tour.hasOne(Schedule, { foreignKey: "tour_id"})
 
 module.exports = Tour
