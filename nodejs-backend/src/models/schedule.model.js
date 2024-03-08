@@ -2,6 +2,7 @@
 
 const { DataTypes, Model } = require("sequelize")
 const sequelize = require("../database/index")
+const Tour = require("./tour.model")
 
 class Schedule extends Model {
     static associations(models) {
@@ -19,5 +20,7 @@ Schedule.init({
         allowNull: false
     }
 }, { sequelize, modelName: "schedule"} )
+
+
 
 module.exports = Schedule
