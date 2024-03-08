@@ -3,6 +3,7 @@
 const cloudinary = require("../utils/cloudinary")
 
 const Tour = require("../models/tour.model")
+const Schedule = require("../models/schedule.model")
 const Sequelize = require("sequelize")
 const Destination = require("../models/destination.model")
 const DestinationTour = require("../models/destination_tour.model")
@@ -24,6 +25,7 @@ const slugify = (text) => {
 
 class TourController {
 
+    // not complete
     createTour = async (req, res, next) => {
         try {
             const {
@@ -116,7 +118,6 @@ class TourController {
         }
     }
 
-    // not complete
     updateTour = async (req, res, next) => {
         const tour_id = req.params.tour_id;
 
@@ -190,6 +191,26 @@ class TourController {
           return res.status(500).json({ message: error.message });
         }
     };
+
+    getScheduleByIdTour = async(req, res, next) => {
+        const tour_id = req.params.tour_id
+        try {
+            const schedule_tour = await Schedule.findOne({
+                where: { tour_id: tour_id },
+                // include: [{
+                //     model: Schedule,
+                //     as: 'schedules'
+                // }]
+            })
+    
+            if (!schedule_tour) return res.status(404).json({ message: "Not found schedule of tour!" })
+            return res.status(200).json({
+                schedule_tour: schedule_tour
+            })
+        } catch(error) {
+            return res.status(500).json({ message: error.message })
+        }
+    }
 
     getAllTours = async(req, res, next) => {
         try {
