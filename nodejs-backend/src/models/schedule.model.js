@@ -1,17 +1,23 @@
 'use strict'
 
-const { DataTypes } = require("sequelize")
+const { DataTypes, Model } = require("sequelize")
 const sequelize = require("../database/index")
 
-const Schedule = sequelize.define("schedule", {
-    schedule_id: {
-        type: DataTypes.INTEGER,
-        unique: true,
-        primaryKey: true
+class Schedule extends Model {
+    static associations(models) {
+        this.hasMany(models.Attraction, {as: 'attractions'})
     }
-
-    // continue
-    
-})
+}
+Schedule.init({
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    schedule_detail: {
+        type: DataTypes.JSON(),
+        allowNull: false
+    }
+}, { sequelize, modelName: "schedule"} )
 
 module.exports = Schedule
