@@ -11,9 +11,11 @@ class ScheduleController {
             const tour = await findTourById(tour_id)
             if (!tour) return res.status(404).json({ message: "Not found tour for creating schedule!" })
 
+            const exist_schedule = await Schedule.findAll({ where: { tour_id: tour_id }})
+            if (exist_schedule) return res.status(400).json({ message: "Tour has already been scheduled! "})
+
             const schedule_detail = req.body.schedule_detail
 
-            console.log(`detail`, schedule_detail)
             for (const schedule of schedule_detail) {
                 for (const detail of schedule.detail) {
                     const name = detail.name;
@@ -34,6 +36,17 @@ class ScheduleController {
                 message: "Create schedule for tour successfully! "
             })
             
+        } catch(error) {
+            return res.status(500).json({ message: error.message })
+        }
+    }
+
+    deleteSchedule = async(req, res, next) => {
+        try {
+            const tour_id = req.params.tour_id
+            const schedule = await Schedule.findOne({ where: { tour_id: tour_id} })
+            await schedule.destroy()
+            return res.status(200).json({ message: "Delete schedule successfully!" })
         } catch(error) {
             return res.status(500).json({ message: error.message })
         }
