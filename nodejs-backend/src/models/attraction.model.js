@@ -13,11 +13,12 @@ Attraction.init({
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     image: {
         type: DataTypes.TEXT,
-        allowNull: true
+        allowNull: true,
     },
     address: {
         type: DataTypes.TEXT,

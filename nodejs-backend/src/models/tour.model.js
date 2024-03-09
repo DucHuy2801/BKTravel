@@ -3,9 +3,6 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../database/index")
 
-const Order = require("./order.model");
-const Destination = require("./destination.model");
-
 const { StatusTour } = require("../common/status");
 const Schedule = require("./schedule.model");
 
@@ -86,7 +83,5 @@ Tour.init({
         allowNull: false
     }
 },  { sequelize, modelName: 'tour' })
-
-Tour.hasOne(Schedule, { foreignKey: "tour_id"})
 
 module.exports = Tour
