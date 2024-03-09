@@ -59,10 +59,14 @@ class TourController {
 
                 for (let k = 0; req.fields[`attractions[${k}][${dest}]`]; k++) {
                     const attraction_name = req.fields[`attractions[${k}][${dest}]`];
-                    const [attraction, created] = await Attraction.findOrCreate({
-                        where: { name: attraction_name, destination_id: destination.destination_id },
-                        defaults: { name: attraction_name, destination_id: destination.destination_id },
-                    });
+                    const images = req.files
+                    const link_image = images[`image[${attraction_name}]`].path 
+                    const image = await cloudinary.uploader.upload(link_image)
+                    const attraction = await Attraction.create({
+                        name: attraction_name,
+                        image: image.secure_url,
+                        destination_id: destination.destination_id
+                    })
                 }
             }
         
@@ -196,11 +200,7 @@ class TourController {
         const tour_id = req.params.tour_id
         try {
             const schedule_tour = await Schedule.findOne({
-                where: { tour_id: tour_id },
-                // include: [{
-                //     model: Schedule,
-                //     as: 'schedules'
-                // }]
+                where: { tour_id: tour_id }
             })
     
             if (!schedule_tour) return res.status(404).json({ message: "Not found schedule of tour!" })
