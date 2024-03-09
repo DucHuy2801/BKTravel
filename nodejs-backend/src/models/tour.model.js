@@ -21,6 +21,10 @@ Tour.init({
         type: DataTypes.TEXT,
         allowNull: true
     },
+    list_image: {
+        type: DataTypes.JSON,
+        allowNull: true
+    },
     description_place: {
         type: DataTypes.TEXT,
         allowNull: true
