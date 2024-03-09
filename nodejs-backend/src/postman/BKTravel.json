@@ -607,24 +607,14 @@
 							"type": "text"
 						},
 						{
-							"key": "image[Đập Đá]",
+							"key": "image[0]",
+							"type": "file",
+							"src": "postman-cloud:///1eede111-1805-4f20-a453-0b91a427b546"
+						},
+						{
+							"key": "image[1]",
 							"type": "file",
 							"src": "postman-cloud:///1eedd801-5670-4710-939b-22ae34334e3b"
-						},
-						{
-							"key": "image[Tháp Nghinh Phong]",
-							"type": "file",
-							"src": "postman-cloud:///1eedb9d6-bf99-4050-9994-b9e73dc6c7b2"
-						},
-						{
-							"key": "image[Xóm rế]",
-							"type": "file",
-							"src": "postman-cloud:///1eebc125-0093-4d00-89f3-9bedc2c1b433"
-						},
-						{
-							"key": "image[Đa cua]",
-							"type": "file",
-							"src": "postman-cloud:///1eed1523-535d-4d30-9ce6-d8b6bd223964"
 						}
 					]
 				},
