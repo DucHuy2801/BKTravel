@@ -40,11 +40,20 @@ class TourController {
                 highlight,
                 note,
                 description,
-                deadline_book_time,
+                deadline_book_time
             } = req.fields;
         
             const destinations = destination_places.split(',').map(destination => destination.trim());
-        
+            
+            let list_image = []
+            let i = 0;
+            while(req.files[`image[${i}]`]) {
+                const path_image = req.files[`image[${i}]`].path
+                const image = await cloudinary.uploader.upload(path_image)
+                list_image.push(image.secure_url)
+                i++;
+            }
+            
             // Create destinations if they don't exist
             for (const dest of destinations) {
                 const [destination, created] = await Destination.findOrCreate({
@@ -52,28 +61,23 @@ class TourController {
                     defaults: { name: dest },
                 });
             }
-        
+
             // Create attractions and associate them with destinations
             for (const dest of destinations) {
                 const destination = await Destination.findOne({ where: { name: dest } });
 
                 for (let k = 0; req.fields[`attractions[${k}][${dest}]`]; k++) {
                     const attraction_name = req.fields[`attractions[${k}][${dest}]`];
-                    // const images = req.files
-                    // const link_image = images[`image[${attraction_name}]`].path 
-                    // const image = await cloudinary.uploader.upload(link_image)
-                    const attraction = await Attraction.create({
-                        name: attraction_name,
-                        // image: image.secure_url,
-                        destination_id: destination.destination_id
+                    const [attraction, created] = await Attraction.findOrCreate({
+                        where: { name: attraction_name, destination_id: destination.destination_id },
+                        defaults: { name: attraction_name, destination_id: destination.destination_id }
                     })
                 }
             }
-        
             // Upload cover image of the tour
             const result = req.files.cover_image.path;
             const link_cover_image = await cloudinary.uploader.upload(result);
-        
+
             // Create the tour
             const newTour = await Tour.create({
                 name,
@@ -90,8 +94,9 @@ class TourController {
                 deadline_book_time,
                 cover_image: link_cover_image.secure_url,
                 current_customers: 0,
+                list_image: JSON.stringify(list_image)
             });
-        
+            
             // Associate destinations with the tour
             for (const dest of destinations) {
                 const destination = await Destination.findOne({ where: { name: dest } });
