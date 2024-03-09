@@ -59,12 +59,12 @@ class TourController {
 
                 for (let k = 0; req.fields[`attractions[${k}][${dest}]`]; k++) {
                     const attraction_name = req.fields[`attractions[${k}][${dest}]`];
-                    const images = req.files
-                    const link_image = images[`image[${attraction_name}]`].path 
-                    const image = await cloudinary.uploader.upload(link_image)
+                    // const images = req.files
+                    // const link_image = images[`image[${attraction_name}]`].path 
+                    // const image = await cloudinary.uploader.upload(link_image)
                     const attraction = await Attraction.create({
                         name: attraction_name,
-                        image: image.secure_url,
+                        // image: image.secure_url,
                         destination_id: destination.destination_id
                     })
                 }
