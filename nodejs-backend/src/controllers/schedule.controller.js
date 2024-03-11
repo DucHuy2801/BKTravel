@@ -1,5 +1,6 @@
 'use strict'
 
+const { StatusTour } = require("../common/status")
 const Attraction = require("../models/attraction.model")
 const Schedule = require("../models/schedule.model")
 const { findTourById } = require("../services/tour.service")
@@ -11,7 +12,7 @@ class ScheduleController {
             const tour = await findTourById(tour_id)
             if (!tour) return res.status(404).json({ message: "Not found tour for creating schedule!" })
 
-            const exist_schedule = await Schedule.findAll({ where: { tour_id: tour_id }})
+            const exist_schedule = await Schedule.findOne({ where: { tour_id: tour_id }})
             if (exist_schedule) return res.status(400).json({ message: "Tour has already been scheduled! "})
 
             const schedule_detail = req.body.schedule_detail
@@ -31,6 +32,10 @@ class ScheduleController {
                 schedule_detail: JSON.parse(JSON.stringify(schedule_detail)),
                 tour_id: tour_id
             })
+
+            tour.status = StatusTour.ONLINE
+            await tour.save()
+            
             return res.status(201).json({ 
                 data: new_schedule,
                 message: "Create schedule for tour successfully! "
