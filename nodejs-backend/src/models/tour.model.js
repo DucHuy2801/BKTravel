@@ -4,7 +4,6 @@ const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../database/index")
 
 const { StatusTour } = require("../common/status");
-const Schedule = require("./schedule.model");
 
 class Tour extends Model {}
 Tour.init({

@@ -2,6 +2,7 @@
 
 const { DataTypes, Model } = require("sequelize")
 const sequelize = require("../database/index")
+const Tour = require("./tour.model")
 
 class Attraction extends Model {}
 
@@ -34,4 +35,5 @@ Attraction.init({
     }
 }, { sequelize, modelName: 'attraction' })
 
+Attraction.belongsTo(Tour)
 module.exports = Attraction;
