@@ -62,18 +62,23 @@ class TourController {
                 });
             }
 
+            // list attractions
+            let list_attractions = []
+
             // Create attractions and associate them with destinations
             for (const dest of destinations) {
                 const destination = await Destination.findOne({ where: { name: dest } });
 
                 for (let k = 0; req.fields[`attractions[${k}][${dest}]`]; k++) {
                     const attraction_name = req.fields[`attractions[${k}][${dest}]`];
+                    list_attractions.push(attraction_name)
                     const [attraction, created] = await Attraction.findOrCreate({
                         where: { name: attraction_name, destination_id: destination.destination_id },
                         defaults: { name: attraction_name, destination_id: destination.destination_id }
                     })
                 }
             }
+
             // Upload cover image of the tour
             const result = req.files.cover_image.path;
             const link_cover_image = await cloudinary.uploader.upload(result);
@@ -105,21 +110,23 @@ class TourController {
                     tour_id: newTour.tour_id,
                     destination_id: destination.destination_id,
                 });
-        
-                // Associate attractions with the tour
-                const attractions = await Attraction.findAll({ where: { destination_id: destination.destination_id } });
-        
-                for (const attraction of attractions) {
-                    await AttractionTour.create({
-                        tour_id: newTour.tour_id,
-                        attraction_id: attraction.attraction_id,
-                    });
-                }
+            }
+            
+
+            // Associate attractions with the tour
+            for (const attraction of list_attractions) {
+                const exist_attraction = await Attraction.findOne({
+                    where: { name: attraction }
+                })
+                const [attraction_tour, created] = await AttractionTour.findOrCreate({
+                    where: { attraction_id: exist_attraction.attraction_id, tour_id: newTour.tour_id },
+                    defaults: { attraction_id: exist_attraction.attraction_id, tour_id: newTour.tour_id }
+                })
             }
         
             return res.status(201).json({
-                data: newTour,
                 message: 'Create tour successfully!',
+                data: newTour
             });
                     
             } catch (error) {
@@ -182,19 +189,23 @@ class TourController {
                     model: Destination,
                     as: "destinations",
                     attributes: ["name"],
-                    include: [{
-                        model: Attraction,
-                        as: "attractions"
-                    }]
-                }, {
+                    // include: [{
+                    //     model: Attraction,
+                    //     as: "attractions",
+                    //     attributes: ["name"],
+                    //     through: AttractionTour
+                    // }]
+                },
+                {
                     model: Attraction,
-                    as: "attractions"
+                    as: "attractions",
+                    attributes: ["name"]
                 }]
-            })
-            
+            });
+
             return res.status(200).json({
-                data: JSON.parse(JSON.stringify(result)),
-                message: "Get tour successfully!"
+                message: "Get tour successfully!",
+                data: JSON.parse(JSON.stringify(result))
             });
         } catch (error) {
           return res.status(500).json({ message: error.message });
