@@ -186,28 +186,18 @@ class TourController {
             const tour = findTourById(tour_id)
             if (!tour) return res.status(404).json({ message: "Not found tour!" })
     
-            // const attractions = await AttractionTour.findAll({
-            //     where: { tour_id: tour_id }
-            // })
             const result = await Tour.findByPk(tour_id, {
                 include: [
                     {
                         model: Destination,
                         as: "destinations",
                         attributes: ["name"],
-                        include: [
-                            {
-                                model: Attraction,
-                                as: "attractions",
-                                attributes: ["name"]
-                            }
-                        ]
                     },
                     {
                         model: Attraction,
                         as: "attractions",
                         attributes: ["name"],
-                        through: AttractionTour // Đảm bảo đúng tên của bảng liên kết
+                        through: AttractionTour 
                     }
                 ]
             });
@@ -218,17 +208,43 @@ class TourController {
                     as: "tours",
                     where: { tour_id: tour_id },
                     attributes: []
-                }, {
-                    model: Destination,
-                    as: "destination",
-                    attributes: ["name"]
                 }],
-                attributes: ["name"]
+                attributes: ["name", "destination_id"]
             });
+    
+            const destinations = await Destination.findAll({
+                include: [{
+                    model: Tour,
+                    as: "tours",
+                    where: { tour_id: tour_id },
+                    attributes: []
+                }],
+                attributes: ["destination_id", "name"]
+            })
+
+            const groupedAttractions = attractions.reduce((acc, attraction) => {
+                const destinationId = attraction.destination_id;
+            
+                if (!acc[destinationId]) {
+                    acc[destinationId] = [];
+                }
+            
+                acc[destinationId].push({ name: attraction.name });
+                return acc;
+            }, {});
+            
+            // asign attractions to destination
+            const destinationsWithAttractions = destinations.map(destination => ({
+                destination: {
+                    name: destination.name
+                },
+                attractions: groupedAttractions[destination.destination_id] || []
+            }));
     
             return res.status(200).json({
                 message: "Get tour successfully!",
-                data: JSON.parse(JSON.stringify(attractions))
+                data: JSON.parse(JSON.stringify(result)),
+                date_for_schedule: JSON.parse(JSON.stringify(destinationsWithAttractions))
             });
         } catch (error) {
             return res.status(500).json({ message: error.message });
