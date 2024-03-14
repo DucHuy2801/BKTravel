@@ -20,7 +20,7 @@ OrderTour.init({
         type: DataTypes.INTEGER,
         allowNull: true,
     }
-}, { sequelize, modelName: "wishlist_tour" })
+}, { sequelize, modelName: "order_tour" })
 
 Order.belongsToMany(Tour, { through: OrderTour, foreignKey: "order_id" })
 Tour.belongsToMany(Order, { through: OrderTour, foreignKey: "tour_id" })
