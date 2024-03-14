@@ -176,27 +176,31 @@ class UserController {
             const existWishlist = await Wishlist.findOne({
                 where: {
                    user_id: user_id
-                }, include: [{
-                    model: Tour,
-                    where: {
-                        tour_id: tour_id
-                    }
-                }]
+                }
             })
-
-            if (existWishlist) {
-                return res.status(400).json({
-                    message: "Tour already exists in the wishlist!"
+            
+            let wishlist
+            if (!existWishlist) {
+                wishlist = await Wishlist.create({
+                    user_id: user_id
                 })
             }
-            const new_wishlist = await WishlistTour.create({
-                wishlist_id: user_id,
-                tour_id: tour_id
+            console.log(`1`)
+            console.log(`exist`, existWishlist ? existWishlist.wishlist_id : wishlist.wishlist_id)
+            
+            const wishlist_tour = await WishlistTour.findOrCreate({
+                where: {
+                    wishlist_id: existWishlist ? existWishlist.wishlist_id : wishlist.wishlist_id,
+                    tour_id: tour_id
+                },
+                defaults: {
+                    wishlist_id: existWishlist ? existWishlist.wishlist_id : wishlist.wishlist_id,
+                    tour_id: tour_id
+                }
             })
 
             return res.status(201).json({
-                message: "Add tour to wishlist successfully!",
-                wishlist: new_wishlist
+                message: "Add tour to wishlist successfully!"
             })
         } catch (error) {
             return res.status(500).json({
@@ -219,7 +223,6 @@ class UserController {
                     wishlist_id: user_id
                 }
             })
-            console.log("1", wishlist)
 
             const tour_ids = wishlist.map((wishlist_tour) => wishlist_tour.dataValues.tour_id)
             const tours = await Tour.findAll({
