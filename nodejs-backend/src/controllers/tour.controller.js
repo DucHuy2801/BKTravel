@@ -326,7 +326,8 @@ class TourController {
             const all_tours = await Tour.findAll({
                 attributes: {
                     exclude: ['updatedAt', 'createdAt']
-                }
+                },
+                order: [['tour_id', 'DESC']]
             })
 
             return res.status(200).json({
@@ -344,7 +345,8 @@ class TourController {
                     status: StatusTour.WAITING
                 }, attributes: {
                     exclude: ['updatedAt', 'createdAt']
-                }
+                },
+                order: [['tour_id', 'DESC']]
             })
             return res.status(200).json({
                 tours: tours
@@ -361,7 +363,8 @@ class TourController {
                     status: StatusTour.ONLINE
                 }, attributes: {
                     exclude: ['updatedAt', 'createdAt']
-                }
+                },
+                order: [['tour_id', 'DESC']]
             })
             return res.status(200).json({
                 tours: tours
@@ -378,7 +381,8 @@ class TourController {
                     status: StatusTour.DELETED
                 }, attributes: {
                     exclude: ['updatedAt', 'createdAt']
-                }
+                },
+                order: [['tour_id', 'DESC']]
             })
             return res.status(200).json({
                 tours: tours
