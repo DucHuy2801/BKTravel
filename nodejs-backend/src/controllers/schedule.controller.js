@@ -2,6 +2,7 @@
 
 const { StatusTour } = require("../common/status")
 const Attraction = require("../models/attraction.model")
+const OtherAttraction = require("../models/other_attraction.model")
 const Schedule = require("../models/schedule.model")
 const { findTourById } = require("../services/tour.service")
 
@@ -22,10 +23,26 @@ class ScheduleController {
                     const name = detail.name;
 
                     const attraction = await Attraction.findOne({ where: { name: name }})
-                    if (!attraction) return res.status(404).json({ message: "Not found attraction in tour!" })
-                    attraction.note = detail.note;
-                    attraction.description = detail.description;
-                    await attraction.save()
+                    if (!attraction) {
+                        let exist_attraction = await OtherAttraction.findOne({ where: { name: name }})
+                        if (!exist_attraction) {
+                            exist_attraction = await OtherAttraction.create({
+                                name: detail.name,
+                                note: detail.note,
+                                description: detail.description
+                            })
+                        }
+                        else {
+                            exist_attraction.note = detail.note;
+                            exist_attraction.description = detail.description;
+                            await exist_attraction.save()
+                        }
+                    }
+                    else {
+                        attraction.note = detail.note;
+                        attraction.description = detail.description;
+                        await attraction.save()
+                    }
                 }
             }
             const new_schedule = await Schedule.create({
