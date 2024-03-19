@@ -1,5 +1,6 @@
 'use strict'
 
+const Order = require('../models/order.model')
 const User = require('../models/user.model')
 
 const findUserByEmail = async (email) => {
@@ -28,8 +29,13 @@ const uploadPicture = async (picture_url) => {
         })
 }
 
+const checkOrderByUser = async (user_id) => {
+    return await Order.findOne({ where: { user_id: user_id }})
+}
+
 module.exports = {
     findUserByEmail,
     uploadPicture,
-    findUserById
+    findUserById,
+    checkOrderByUser
 }
