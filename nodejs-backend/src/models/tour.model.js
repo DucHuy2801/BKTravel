@@ -4,6 +4,7 @@ const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../database/index")
 
 const { StatusTour } = require("../common/status");
+const OrderItem = require("./order_item.model");
 
 class Tour extends Model {}
 Tour.init({
@@ -70,7 +71,7 @@ Tour.init({
         allowNull: false
     },
     price: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     },
     highlight: {
@@ -86,5 +87,7 @@ Tour.init({
         allowNull: false
     }
 },  { sequelize, modelName: 'tour' })
+
+Tour.hasMany(OrderItem, { foreignKey: "tour_id"})
 
 module.exports = Tour
