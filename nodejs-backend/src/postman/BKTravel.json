@@ -423,6 +423,82 @@
 			"response": []
 		},
 		{
+			"name": "Increment order_item of order",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\": 2,\r\n    \"tour_id\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/cart/increment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"cart",
+						"increment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Decrement order_item of order",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\": 2,\r\n    \"tour_id\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/cart/decrement",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"cart",
+						"decrement"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Upload cover image",
 			"request": {
 				"method": "POST",
@@ -568,7 +644,7 @@
 						},
 						{
 							"key": "price",
-							"value": "747328",
+							"value": "1000",
 							"type": "text"
 						},
 						{
@@ -674,98 +750,8 @@
 						"disabled": true
 					}
 				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "name",
-							"value": "Tour Ngày Tham Quan Đà Nẵng\n",
-							"type": "text"
-						},
-						{
-							"key": "max_customer",
-							"value": "200",
-							"type": "text"
-						},
-						{
-							"key": "departure_date",
-							"value": "2024-01-26",
-							"type": "text"
-						},
-						{
-							"key": "deadline_book_time",
-							"value": "2024-01-30",
-							"type": "text"
-						},
-						{
-							"key": "departure_time",
-							"value": "7 AM",
-							"type": "text"
-						},
-						{
-							"key": "departure_place",
-							"value": "Hồ Chí Minh",
-							"type": "text"
-						},
-						{
-							"key": "cover_image",
-							"type": "file",
-							"src": "postman-cloud:///1eebc125-0093-4d00-89f3-9bedc2c1b433"
-						},
-						{
-							"key": "destination_place",
-							"value": "Hồ Chí Minh",
-							"type": "text"
-						},
-						{
-							"key": "time",
-							"value": "1 ngày 5 giờ",
-							"type": "text"
-						},
-						{
-							"key": "price",
-							"value": "747328",
-							"type": "text"
-						},
-						{
-							"key": "highlight",
-							"value": "Dành cả ngày khám phá Đà Nẵng và ghé thăm các địa điểm lịch sử hấp dẫn và thu hút du khách nhất của thành phố",
-							"type": "text"
-						},
-						{
-							"key": "note",
-							"value": "Tour đã gồm đưa đón và trả khách ở khách sạn cũng như ăn trưa",
-							"type": "text"
-						},
-						{
-							"key": "description",
-							"value": "Nằm ở ngay tại trung tâm Việt Nam, Đà Nẵng là điểm dừng chân không thể bỏ qua cho bất kỳ hành trình nào của bạn ở Việt Nam. Chuyến đi trong ngày này sẽ đưa bạn đến những điểm tham quan hấp dẫn của thành phố và sẽ giúp bạn đắm chìm vào cuộc sống của một cư dân Đà Nẵng điển hình. Bắt đầu với chuyến thăm làng đá Non Nước nằm ngay dưới chân núi Ngũ Hành Sơn. Bạn sẽ có cơ hội chiêm ngưỡng quá trình tạo tác đầy điêu luyện của các nghệ nhân. Sau đó, bạn tiếp tục đến tham quan chùa Linh Ứng Bãi Bụt, ngôi chùa lớn nhất của thành phố. Hoạt động kế theo chính là trải nghiệm cầu Thuận Phước, cầy dây văng dài nhất Việt Nam, trong khi ngắm nhìn cảnh đẹp trên sông Hàn và những vùng xung quanh. Điểm đến sau đó là Bảo Tàng Điêu Khắc Chăm, nơi lưu giữ hình ảnh của những người Chăm bản địa từng sinh sống nơi đây. Bạn sẽ dừng ăn trưa tại nhà hàng gần đó, nạp năng lượng để chuẩn bị cho điểm tham quan cuối: chợ Hàn - nơi bạn có thể khám phá nhịp sống và buôn bán tấp nập của người địa phương. Sau đó bạn sẽ được đưa về tận khách sạn hoặc điểm tập trung ban đầu và kết thúc tour.",
-							"type": "text"
-						},
-						{
-							"key": "attractions[0][name]",
-							"value": "Dinh Độc Lập",
-							"type": "text"
-						},
-						{
-							"key": "attractions[1][name]",
-							"value": "Cầu Bà Đen",
-							"type": "text"
-						},
-						{
-							"key": "attractions[2][name]",
-							"value": "Chợ Bến Thành",
-							"type": "text"
-						},
-						{
-							"key": "attractions[3][name]",
-							"value": "Công viên Lê Thị Riêng",
-							"type": "text"
-						}
-					]
-				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/user/wishlist/:user_id/tours/:tour_id",
+					"raw": "http://localhost:8080/api/v1/user/wishlist/:user_id/tours/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -778,16 +764,12 @@
 						"wishlist",
 						":user_id",
 						"tours",
-						":tour_id"
+						"1"
 					],
 					"variable": [
 						{
 							"key": "user_id",
 							"value": "1"
-						},
-						{
-							"key": "tour_id",
-							"value": "2"
 						}
 					]
 				}
@@ -1032,6 +1014,45 @@
 			"response": []
 		},
 		{
+			"name": "Delete order_item from order",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tour_id\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/cart/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"cart",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Delete schedule",
 			"request": {
 				"method": "DELETE",
@@ -1149,7 +1170,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/tour/6",
+					"raw": "http://localhost:8080/api/v1/tour/2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -1159,7 +1180,7 @@
 						"api",
 						"v1",
 						"tour",
-						"6"
+						"2"
 					]
 				}
 			},
@@ -1268,7 +1289,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"tour_id\": 1,\r\n    \"schedule_detail\": [\r\n  {\r\n    \"schedule_date\": \"Ngày 1\",\r\n    \"date\": \"08/03/2024\",\r\n    \"detail\": [\r\n      {\"range_time\": \"8AM-10AM\", \"name\": \"Tháp Nghinh Phong\", \"note\": \"Note for Cố Đô Huế\", \"description\": \"Description for Cố Đô Huế\"},\r\n      {\"range_time\": \"12AM-14PM\", \"name\": \"Xóm rế\", \"note\": \"Note for Chùa Thiên Mụ\", \"description\": \"Description for Chùa Thiên Mụ\"}\r\n    ]\r\n  },\r\n  {\r\n    \"schedule_date\": \"Ngày 2\",\r\n    \"date\": \"09/03/2024\",\r\n    \"detail\": [\r\n      {\"range_time\": \"8AM-10AM\", \"name\": \"Đập Đá\", \"note\": \"Note for Cố Đô Huế\", \"description\": \"Description for Cố Đô Huế\"},\r\n      {\"range_time\": \"12AM-14PM\", \"name\": \"Đa cua\", \"note\": \"Note for Chùa Thiên Mụ\", \"description\": \"Description for Chùa Thiên Mụ\"}\r\n    ]\r\n  }\r\n]\r\n}",
+					"raw": "{\r\n    \"tour_id\": 1,\r\n    \"schedule_detail\": [\r\n  {\r\n    \"schedule_date\": \"Ngày 1\",\r\n    \"date\": \"08/03/2024\",\r\n    \"detail\": [\r\n      {\"range_time\": \"8AM-10AM\", \"name\": \"Ăn sáng\", \"note\": \"Note for Cố Đô Huế\", \"description\": \"Description for Cố Đô Huế\"},\r\n      {\"range_time\": \"12AM-14PM\", \"name\": \"Xóm rế\", \"note\": \"Note for Chùa Thiên Mụ\", \"description\": \"Description for Chùa Thiên Mụ\"}\r\n    ]\r\n  },\r\n  {\r\n    \"schedule_date\": \"Ngày 2\",\r\n    \"date\": \"09/03/2024\",\r\n    \"detail\": [\r\n      {\"range_time\": \"8AM-10AM\", \"name\": \"Đập Đá\", \"note\": \"Note for Cố Đô Huế\", \"description\": \"Description for Cố Đô Huế\"},\r\n      {\"range_time\": \"12AM-14PM\", \"name\": \"Đa cua\", \"note\": \"Note for Chùa Thiên Mụ\", \"description\": \"Description for Chùa Thiên Mụ\"}\r\n    ]\r\n  }\r\n]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1286,6 +1307,74 @@
 						"api",
 						"v1",
 						"schedule"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add tour to cart",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\": \"2\",\r\n    \"tour\": {\r\n        \"tour_id\": 1,\r\n        \"quantity\": 1\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/cart",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get cart by user",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/cart/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"cart",
+						"2"
 					]
 				}
 			},
