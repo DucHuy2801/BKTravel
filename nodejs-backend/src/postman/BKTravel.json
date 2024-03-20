@@ -423,7 +423,7 @@
 			"response": []
 		},
 		{
-			"name": "Increment order_item of order",
+			"name": "Increment child quantity",
 			"request": {
 				"method": "PUT",
 				"header": [
@@ -435,7 +435,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"user_id\": 2,\r\n    \"tour_id\": 1\r\n}",
+					"raw": "{\r\n    \"user_id\": 2,\r\n    \"tour_id\": 2\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -443,7 +443,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/user/cart/increment",
+					"raw": "http://localhost:8080/api/v1/user/cart/order-item/child-quantity/increment",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -454,6 +454,8 @@
 						"v1",
 						"user",
 						"cart",
+						"order-item",
+						"child-quantity",
 						"increment"
 					]
 				}
@@ -461,7 +463,7 @@
 			"response": []
 		},
 		{
-			"name": "Decrement order_item of order",
+			"name": "Increase adult quantity",
 			"request": {
 				"method": "PUT",
 				"header": [
@@ -481,7 +483,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/user/cart/decrement",
+					"raw": "http://localhost:8080/api/v1/user/cart/order-item/adult-quantity/increment",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -492,6 +494,88 @@
 						"v1",
 						"user",
 						"cart",
+						"order-item",
+						"adult-quantity",
+						"increment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Decrease adult quantity",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\": 2,\r\n    \"tour_id\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/cart/order-item/adult-quantity/decrement",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"cart",
+						"order-item",
+						"adult-quantity",
+						"decrement"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Decrease child quantity",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNTg1OTEwMSwiZXhwIjoxNzA1ODYwOTAxfQ.CVQhYHm4g_-xFLV-rIezkRoyzOPogEkxm5nzrX6S930",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\": 2,\r\n    \"tour_id\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/cart/order-item/child-quantity/decrement",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"cart",
+						"order-item",
+						"child-quantity",
 						"decrement"
 					]
 				}
@@ -1035,7 +1119,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/user/cart/2",
+					"raw": "http://localhost:8080/api/v1/user/cart/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -1046,7 +1130,7 @@
 						"v1",
 						"user",
 						"cart",
-						"2"
+						"1"
 					]
 				}
 			},
@@ -1326,7 +1410,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"user_id\": \"2\",\r\n    \"tour\": {\r\n        \"tour_id\": 1,\r\n        \"quantity\": 1\r\n    }\r\n}",
+					"raw": "{\r\n    \"user_id\": \"2\",\r\n    \"tour\": {\r\n        \"tour_id\": 2,\r\n        \"adult_quantity\": 1,\r\n        \"child_quantity\": 2\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
