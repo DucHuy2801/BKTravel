@@ -3,6 +3,7 @@
 const Cart = require("../models/cart.model");
 const Order = require("../models/order.model");
 const OrderItem = require("../models/order_item.model");
+const User = require("../models/user.model")
 const { findOrderItem } = require("../services/order.service");
 const { findTourById } = require("../services/tour.service");
 const { findUserById, checkOrderByUser } = require("../services/user.service");
@@ -13,7 +14,8 @@ class CartController {
      *      user_id,
      *      tour: {
      *          tour_id,
-     *          quantity
+     *          adult_quantity,
+     *          child_quantity
      *      }
      * }
      * @returns(200)
@@ -30,7 +32,7 @@ class CartController {
                 defaults: { cart_id: user_id, user_id: user_id }
             })
     
-            // check order by user
+            // check order by user if it doesn't create new_order
             const order = await checkOrderByUser(user_id)
             let new_order
             if (!order) {
@@ -42,7 +44,7 @@ class CartController {
             const order_id = order ? order.order_id : new_order.order_id
     
             // check order_item in order if it isn't, create order_item
-            const { tour_id, quantity } = req.body.tour
+            const { tour_id, adult_quantity, child_quantity } = req.body.tour
             const tour = await findTourById(tour_id)
             if (!tour) return res.status(404).json({ message: "Not found tour!" })
     
@@ -54,27 +56,33 @@ class CartController {
                 orderItem = await OrderItem.create({
                     tour_id: tour_id,
                     price: tour.price,
-                    quantity: quantity,
+                    quantity: adult_quantity + child_quantity,
+                    adult_quantity: adult_quantity,
+                    child_quantity: child_quantity,
                     order_id: order_id
                 })
             } else {
-                order_item.quantity += quantity
+                order_item.adult_quantity += adult_quantity,
+                order_item.child_quantity += child_quantity
+                order_item.quantity += (adult_quantity + child_quantity)
                 await order_item.save()
             }
             
             // update total of order
-            const quantity_order = orderItem ? orderItem.quantity : order_item.quantity
+            const child_order = orderItem ? orderItem.child_quantity : order_item.child_quantity;
+            const adult_order = orderItem ? orderItem.adult_quantity : order_item.adult_quantity
+
+            const new_total = parseFloat(adult_order * (tour.price)) + parseFloat(0.75 * child_order * (tour.price))
             if (!order) {
-                new_order.total= parseFloat(quantity_order * (tour.price));
+                new_order.total= new_total; 
                 await new_order.save()
             } else {
-                const new_total = parseFloat(order.total) + parseFloat(quantity_order * (tour.price));
-                order.total = new_total;
+                order.total = new_total + parseFloat(order.total);
                 await order.save()
             }
             return res.status(200).json({
                 message: "Add tour to cart successfully!",
-                cart: order
+                cart: order ? order : new_order
             })
         } catch (error) {
             return res.status(500).json({ message: error.message })
@@ -88,13 +96,12 @@ class CartController {
     getCartByUser = async (req, res, next) => {
         const user_id = req.params.user_id;
 
-        const cart = await Order.findByPk(user_id, {
+        const cart = await User.findByPk(user_id, {
             include: [{
-                model: OrderItem,
-                as: "order_items"
+              model: Order,
+              include: OrderItem 
             }]
         })
-
         return res.status(200).json({
             message: "Get cart successfully!",
             data: cart
@@ -109,15 +116,15 @@ class CartController {
      * } 
      * @returns 
      */
-    incrementQuantityOrderItem = async (req, res, next) => {
+    incrementAdultQuantityOrderItem = async (req, res, next) => {
         try {
             const { user_id, tour_id } = req.body
             const order = await checkOrderByUser(user_id)
             if (!order) return res.status(404).json({ message: "Not found order of user!"})
     
-            const order_item = await findOrderItem(user_id, tour_id)
+            const order_item = await findOrderItem(order.order_id, tour_id)
             if (!order_item) return res.status(404).json({ message: "Not found order_item!"})
-            order_item.quantity++;
+            order_item.adult_quantity++;
             await order_item.save()
             
             const new_total = parseFloat(order.total) + parseFloat(order_item.price)
@@ -125,7 +132,7 @@ class CartController {
             await order.save()
 
             return res.status(200).json({ 
-                message: "Increase order_item successfully!",
+                message: "Increase quantity of order item successfully!",
                 cart: order
             })
         } catch (error) {
@@ -133,15 +140,15 @@ class CartController {
         }
     }
 
-    decrementQuantityOrderItem = async (req, res, next) => {
+    decrementAdultQuantityOrderItem = async (req, res, next) => {
         try {
             const { user_id, tour_id } = req.body
             const order = await checkOrderByUser(user_id)
             if (!order) return res.status(404).json({ message: "Not found order of user!"})
     
-            const order_item = await findOrderItem(user_id, tour_id)
+            const order_item = await findOrderItem(order.order_id, tour_id)
             if (!order_item) return res.status(404).json({ message: "Not found order_item!"})
-            order_item.quantity--;
+            order_item.adult_quantity--;
             await order_item.save()
 
             if (order_item.quantity == 0) {
@@ -153,7 +160,59 @@ class CartController {
             await order.save()
 
             return res.status(200).json({ 
-                message: "Decrease order_item successfully!",
+                message: "Decrease quantity of order_item successfully!",
+                cart: order
+            })
+        } catch (error) {
+            return res.status(500).json({ message: error.message })
+        }
+    }
+
+    incrementChildQuantityOrderItem = async (req, res, next) => {
+        try {
+            const { user_id, tour_id } = req.body
+            const order = await checkOrderByUser(user_id)
+            if (!order) return res.status(404).json({ message: "Not found order of user!"})
+    
+            const order_item = await findOrderItem(order.order_id, tour_id)
+            if (!order_item) return res.status(404).json({ message: "Not found order_item!"})
+            order_item.child_quantity++;
+            await order_item.save()
+            
+            const new_total = parseFloat(order.total) + parseFloat(0.75 * order_item.price)
+            order.total = new_total;
+            await order.save()
+
+            return res.status(200).json({ 
+                message: "Increase quantity of order item successfully!",
+                cart: order
+            })
+        } catch (error) {
+            return res.status(500).json({ message: error.message })
+        }
+    }
+
+    decrementChildQuantityOrderItem = async (req, res, next) => {
+        try {
+            const { user_id, tour_id } = req.body
+            const order = await checkOrderByUser(user_id)
+            if (!order) return res.status(404).json({ message: "Not found order of user!"})
+    
+            const order_item = await findOrderItem(order.order_id, tour_id)
+            if (!order_item) return res.status(404).json({ message: "Not found order_item!"})
+            order_item.child_quantity--;
+            await order_item.save()
+
+            if (order_item.quantity == 0) {
+                await order_item.destroy()
+            }
+            
+            const new_total = parseFloat(order.total) - parseFloat(0.75 * order_item.price)
+            order.total = new_total <= 0 ? 0 : new_total;
+            await order.save()
+
+            return res.status(200).json({ 
+                message: "Decrease quantity of order_item successfully!",
                 cart: order
             })
         } catch (error) {
@@ -169,7 +228,7 @@ class CartController {
             if (!order) return res.status(404).json({ message: "Not found order" })
             const order_item = await OrderItem.findOne({
                 where: {
-                    order_id: user_id,
+                    user_id: user_id,
                     tour_id: tour_id
                 }
             })
