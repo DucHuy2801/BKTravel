@@ -2,10 +2,10 @@
 
 const OrderItem = require("../models/order_item.model")
 
-const findOrderItem = async (user_id, tour_id) => {
+const findOrderItem = async (order_id, tour_id) => {
     return await OrderItem.findOne({
         where: {
-            order_id: user_id,
+            order_id: order_id,
             tour_id: tour_id
         }
     })
