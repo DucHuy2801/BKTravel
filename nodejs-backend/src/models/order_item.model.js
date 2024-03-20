@@ -10,9 +10,18 @@ OrderItem.init({
         autoIncrement: true,
         primaryKey: true
     },
+    adult_quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    child_quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
     quantity: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true,
+        defaultValue: 0
     },
     price: {
         type: DataTypes.FLOAT,
