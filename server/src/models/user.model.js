@@ -1,8 +1,13 @@
+'use strict'
+
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../database/index");
 
 const Order = require("./order.model");
 const Wishlist = require("./wishlist.model");
+const Message = require("./message.model");
+const GroupMember = require("./group_member.model");
+const Cart = require("./cart.model");
 
 const role_user = {
     ADMIN: 'admin',
@@ -80,5 +85,8 @@ User.init(
 
 User.hasOne(Order, { foreignKey: 'user_id' });
 User.hasOne(Wishlist, { foreignKey: 'user_id'})
+User.hasMany(Message, { foreignKey: "user_id" })
+User.hasMany(GroupMember, { foreignKey: "user_id"})
+User.hasOne(Cart, { foreignKey: "user_id"})
 
 module.exports = User;

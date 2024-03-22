@@ -10,7 +10,20 @@ const StatusOrder = {
     PAYMENT: 'Đã thanh toán'
 }
 
+const RoleUser = {
+    ADMIN: 'admin',
+    GUIDER: 'guider',
+    CUSTOMER: 'customer'
+}
+
+const TypeDiscount = {
+    FIXED: "fixed",
+    PERCENTAGE: "percentage"
+}
+
 module.exports = {
     StatusTour,
-    StatusOrder
+    StatusOrder,
+    RoleUser,
+    TypeDiscount
 }

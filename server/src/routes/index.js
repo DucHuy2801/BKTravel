@@ -9,6 +9,7 @@ router.use('/api/v1/destination', require("./destination"))
 router.use('/api/v1/schedule', require("./schedule"))
 router.use('/api/v1/user', require("./user"))
 router.use('/api/v1/user/cart', require("./cart"))
+router.use('/api/v1/user/payment', require("./payment"))
 router.use('/api/v1/tour', require("./tour"))
 router.use('/api/v1/voucher', require("./voucher"))
 

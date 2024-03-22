@@ -2,11 +2,7 @@
 
 const { DataTypes } = require("sequelize")
 const sequelize = require("../database/index")
-
-const typeVoucher = {
-    PERCENT: 'percent',
-    FIXED: 'fixed'
-}
+const { TypeDiscount } = require("../common/status")
 
 const Voucher = sequelize.define("voucher", {
     voucher_id: {
@@ -23,7 +19,7 @@ const Voucher = sequelize.define("voucher", {
         allowNull: false
     },
     type: {
-        type: DataTypes.ENUM(typeVoucher.PERCENT, typeVoucher.FIXED),
+        type: DataTypes.ENUM(TypeDiscount.PERCENTAGE, TypeDiscount.FIXED),
         allowNull: false
     },
     value_discount: {
@@ -36,7 +32,7 @@ const Voucher = sequelize.define("voucher", {
     },
     remain_number: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     },
     min_order_value: {
         type: DataTypes.FLOAT,

@@ -10,7 +10,7 @@ router.use(formidableMiddleware());
 router.post("", asyncHandler(voucherController.createVoucher))
 router.get("/all", asyncHandler(voucherController.getAllVouchers))
 router.get("/:voucher_id", asyncHandler(voucherController.getVoucher))
-router.patch("/:voucher_id", asyncHandler(voucherController.updateVoucher))
+router.put("/:voucher_id", asyncHandler(voucherController.updateVoucher))
 router.delete("/:voucher_id", asyncHandler(voucherController.deleteVoucher))
 
 module.exports = router
