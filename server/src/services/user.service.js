@@ -1,5 +1,6 @@
 'use strict'
 
+const Cart = require('../models/cart.model')
 const Order = require('../models/order.model')
 const User = require('../models/user.model')
 
@@ -33,9 +34,14 @@ const checkOrderByUser = async (user_id) => {
     return await Order.findOne({ where: { user_id: user_id }})
 }
 
+const checkCartByUser = async (user_id) => {
+    return await Cart.findOne({ where: { user_id: user_id }})
+}
+
 module.exports = {
     findUserByEmail,
     uploadPicture,
     findUserById,
-    checkOrderByUser
+    checkOrderByUser,
+    checkCartByUser
 }
