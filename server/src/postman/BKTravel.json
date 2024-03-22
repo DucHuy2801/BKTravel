@@ -100,6 +100,141 @@
 			"response": []
 		},
 		{
+			"name": "Create payment url",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"order_items\": [1],\r\n    \"user_id\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/payment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"payment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refund payment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"order_items\": [1]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"vnpayment",
+						"vn"
+					],
+					"path": [
+						"merchant_webapi",
+						"api",
+						"transaction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get result payment",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/payment/vnpay_ipn?vnp_Amount=373664000&vnp_BankCode=NCB&vnp_BankTranNo=VNP14352230&vnp_CardType=ATM&vnp_OrderInfo=Thanh+toan+don+hang+ve+du+lich&vnp_PayDate=20240322225948&vnp_ResponseCode=00&vnp_TmnCode=7ONWQPBC&vnp_TransactionNo=14352230&vnp_TransactionStatus=00&vnp_TxnRef=22160143&vnp_SecureHash=a53d86ac465079432a3991d819129ff8aba05baa45cb637161052c72a0b10340348091a707b8c4bd2d631bd85e934534b56631a750fce82a95f6e5067f2644ab",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"payment",
+						"vnpay_ipn"
+					],
+					"query": [
+						{
+							"key": "vnp_Amount",
+							"value": "373664000"
+						},
+						{
+							"key": "vnp_BankCode",
+							"value": "NCB"
+						},
+						{
+							"key": "vnp_BankTranNo",
+							"value": "VNP14352230"
+						},
+						{
+							"key": "vnp_CardType",
+							"value": "ATM"
+						},
+						{
+							"key": "vnp_OrderInfo",
+							"value": "Thanh+toan+don+hang+ve+du+lich"
+						},
+						{
+							"key": "vnp_PayDate",
+							"value": "20240322225948"
+						},
+						{
+							"key": "vnp_ResponseCode",
+							"value": "00"
+						},
+						{
+							"key": "vnp_TmnCode",
+							"value": "7ONWQPBC"
+						},
+						{
+							"key": "vnp_TransactionNo",
+							"value": "14352230"
+						},
+						{
+							"key": "vnp_TransactionStatus",
+							"value": "00"
+						},
+						{
+							"key": "vnp_TxnRef",
+							"value": "22160143"
+						},
+						{
+							"key": "vnp_SecureHash",
+							"value": "a53d86ac465079432a3991d819129ff8aba05baa45cb637161052c72a0b10340348091a707b8c4bd2d631bd85e934534b56631a750fce82a95f6e5067f2644ab"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Resetpassword",
 			"request": {
 				"method": "POST",
@@ -205,6 +340,35 @@
 							"key": "user_id",
 							"value": "1"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get completed order by user",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imh1eS5uZ3V5ZW4yODAxMjAwMkBoY211dC5lZHUudm4iLCJyb2xlX3VzZXIiOiJjdXN0b21lciIsImlhdCI6MTcwNjA3NDI0NiwiZXhwIjoxNzA2MDc2MDQ2fQ.e8ceK8R1EA9l2Rg0L5EP9foKw1mja0OJuIFNqj8TiRM",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/2/completed_order",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"2",
+						"completed_order"
 					]
 				}
 			},
@@ -475,7 +639,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"user_id\": 2,\r\n    \"tour_id\": 1\r\n}",
+					"raw": "{\r\n    \"user_id\": 2,\r\n    \"tour_id\": 2\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -515,7 +679,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"user_id\": 2,\r\n    \"tour_id\": 1\r\n}",
+					"raw": "{\r\n    \"user_id\": 2,\r\n    \"tour_id\": 2\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1254,7 +1418,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/tour/2",
+					"raw": "http://localhost:8080/api/v1/tour/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -1264,7 +1428,7 @@
 						"api",
 						"v1",
 						"tour",
-						"2"
+						"1"
 					]
 				}
 			},
@@ -1410,7 +1574,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"user_id\": \"2\",\r\n    \"tour\": {\r\n        \"tour_id\": 2,\r\n        \"adult_quantity\": 1,\r\n        \"child_quantity\": 2\r\n    }\r\n}",
+					"raw": "{\r\n    \"user_id\": \"2\",\r\n    \"tour\": {\r\n        \"tour_id\": 1,\r\n        \"adult_quantity\": 1,\r\n        \"child_quantity\": 2\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
