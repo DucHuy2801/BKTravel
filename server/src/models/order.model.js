@@ -14,13 +14,14 @@ Order.init(
             primaryKey: true,
             autoIncrement: true,
         },
-        time: {
+        payment_time: {
             type: DataTypes.DATE,
             allowNull: true
         },
         status: {
-            type: DataTypes.ENUM(StatusOrder.CANCEL, StatusOrder.NOT_PAYMENT, StatusOrder.PAYMENT),
-            allowNull: true
+            type: DataTypes.ENUM(StatusOrder.CANCEL, StatusOrder.PENDING, StatusOrder.COMPLETE, StatusOrder.FAILED),
+            allowNull: false,
+            defaultValue: StatusOrder.PENDING
         },
         total: {
             type: DataTypes.DECIMAL(10, 2),

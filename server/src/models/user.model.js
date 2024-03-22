@@ -83,10 +83,10 @@ User.init(
     }, { sequelize, modelName: 'user'}
 )
 
-User.hasOne(Order, { foreignKey: 'user_id' });
 User.hasOne(Wishlist, { foreignKey: 'user_id'})
 User.hasMany(Message, { foreignKey: "user_id" })
 User.hasMany(GroupMember, { foreignKey: "user_id"})
 User.hasOne(Cart, { foreignKey: "user_id"})
+User.hasMany(Order, { foreignKey: 'user_id' });
 
 module.exports = User;

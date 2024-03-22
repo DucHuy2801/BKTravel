@@ -40,10 +40,8 @@ class PaymentController {
                 return res.status(400).json({ message: "Tour is full!"})
             tour.current_customers = order_item.adult_quantity + order_item.child_quantity
             await tour.save()
-            console.log(`tour: current_customers:::`, tour.current_customers)
         }
 
-        console.log(`total_price:::`, totalPrice)
         process.env.TZ = 'Asia/Ho_Chi_Minh';
         let date = new Date();
         let createDate = moment(date).format('YYYYMMDDHHmmss');
@@ -80,21 +78,53 @@ class PaymentController {
         let hmac = crypto.createHmac("sha512", secretKey);
         vnp_Params['vnp_SecureHash'] = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
         vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
-        console.log(vnpUrl);
-        res.send({url: vnpUrl});    
+        return res.status(200).json({
+            link_payment: vnpUrl
+        }) 
+    }
+
+    getResultPayment = async (req, res, next) => {
+        try {
+            const vnp_Params = req.query;
+            const secureHash = vnp_Params['vnp_SecureHash'];
+    
+            delete vnp_Params['vnp_SecureHash'];
+            delete vnp_Params['vnp_SecureHashType'];
+    
+            const sortedParams = sortObject(vnp_Params);
+    
+            const signData = querystring.stringify(sortedParams, { encode: false });  
+            
+            const hmac = crypto.createHmac("sha512", process.env.vnp_HashSecret);
+            const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
+    
+            if(secureHash === signed){
+                const orderId = vnp_Params['vnp_TxnRef'];
+                const rspCode = vnp_Params['vnp_ResponseCode'];
+                
+                if (rspCode === '00') {
+                    return res.status(200).json({ RspCode: '00', Message: 'Success' });
+                } else {
+                    return res.status(200).json({ RspCode: rspCode, Message: 'Transaction failed' });
+                }
+            } else {
+                return res.status(200).json({ RspCode: '97', Message: 'Fail checksum' });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            return res.status(500).json({ message: "Internal server error" });
+        }
     }
 
     returnPayment = async (req, res, next) => {
         let vnp_Params = req.query;
-
         let secureHash = vnp_Params["vnp_SecureHash"];
     
         delete vnp_Params["vnp_SecureHash"];
         delete vnp_Params["vnp_SecureHashType"];
     
         vnp_Params = sortObject(vnp_Params);
-    
-        let querystring = require("qs");
+
         let signData = querystring.stringify(vnp_Params, { encode: false });
         let crypto = require("crypto");
         let hmac = crypto.createHmac("sha512", secretKey);
