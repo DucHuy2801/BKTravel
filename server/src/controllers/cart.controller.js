@@ -197,6 +197,7 @@ class CartController {
             
             const new_total = parseFloat(cart.total) - parseFloat(0.75 * order_item.price)
             cart.total = new_total <= 0 ? 0 : new_total;
+            cart.amount_items = new_total <= 0 ? 0 : new_total;
             await cart.save()
 
             return res.status(200).json({ 
