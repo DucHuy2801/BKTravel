@@ -6,8 +6,9 @@ const StatusTour = {
 
 const StatusOrder = {
     CANCEL: 'Hủy',
-    NOT_PAYMENT: 'Chưa thanh toán',
-    PAYMENT: 'Đã thanh toán'
+    PENDING: 'Chưa thanh toán',
+    COMPLETE: 'Đã thanh toán',
+    FAILED: 'Thất bại'
 }
 
 const RoleUser = {
