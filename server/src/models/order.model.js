@@ -14,6 +14,10 @@ Order.init(
             primaryKey: true,
             autoIncrement: true,
         },
+        payment_id: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
         payment_time: {
             type: DataTypes.DATE,
             allowNull: true
