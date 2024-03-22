@@ -125,6 +125,7 @@ class CartController {
             const order_item = await findOrderItem(order.order_id, tour_id)
             if (!order_item) return res.status(404).json({ message: "Not found order_item!"})
             order_item.adult_quantity++;
+            order_item.quantity++;
             await order_item.save()
             
             const new_total = parseFloat(order.total) + parseFloat(order_item.price)
@@ -149,6 +150,7 @@ class CartController {
             const order_item = await findOrderItem(order.order_id, tour_id)
             if (!order_item) return res.status(404).json({ message: "Not found order_item!"})
             order_item.adult_quantity--;
+            order_item.quantity--;
             await order_item.save()
 
             if (order_item.quantity == 0) {
@@ -177,6 +179,7 @@ class CartController {
             const order_item = await findOrderItem(order.order_id, tour_id)
             if (!order_item) return res.status(404).json({ message: "Not found order_item!"})
             order_item.child_quantity++;
+            order_item.quantity++;
             await order_item.save()
             
             const new_total = parseFloat(order.total) + parseFloat(0.75 * order_item.price)
@@ -201,6 +204,7 @@ class CartController {
             const order_item = await findOrderItem(order.order_id, tour_id)
             if (!order_item) return res.status(404).json({ message: "Not found order_item!"})
             order_item.child_quantity--;
+            order_item.quantity--;
             await order_item.save()
 
             if (order_item.quantity == 0) {
