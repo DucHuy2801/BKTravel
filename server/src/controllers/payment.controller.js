@@ -9,6 +9,7 @@ const OrderItem = require('../models/order_item.model');
 const User = require('../models/user.model')
 const Order = require('../models/order.model');
 const { StatusOrder } = require('../common/status');
+const { updateTotalCart } = require('../services/cart.service');
 
 
 const tmnCode = process.env.vnp_TmnCode;
@@ -139,7 +140,11 @@ class PaymentController {
                     order.status = StatusOrder.COMPLETE;
                     await order.save()
 
+                    console.log(`total:::`, order.total)
                     await OrderItem.destroy({ where: { order_id: order.order_id } });
+
+                    // update total of cart
+                    await updateTotalCart(order.user_id, order.total)
 
                     return res.status(200).json({ RspCode: '00', Message: 'You pay for order successfully!' });
                 } else {
