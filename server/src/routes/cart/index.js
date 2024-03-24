@@ -11,6 +11,6 @@ router.put("/order-item/child-quantity/increment", asyncHandler(cartController.i
 router.put("/order-item/child-quantity/decrement", asyncHandler(cartController.decrementChildQuantityOrderItem))
 router.put("/order-item/adult-quantity/increment", asyncHandler(cartController.incrementAdultQuantityOrderItem))
 router.put("/order-item/adult-quantity/decrement", asyncHandler(cartController.decrementAdultQuantityOrderItem))
-router.delete("/:user_id", asyncHandler(cartController.deleteOrderItem))
+router.delete("/:cart_id", asyncHandler(cartController.deleteOrderItem))
 
 module.exports = router

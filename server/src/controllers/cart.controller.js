@@ -239,26 +239,25 @@ class CartController {
 
     deleteOrderItem = async (req, res, next) => {
         try {
-            const user_id = req.params.user_id
+            const cart_id = req.params.cart_id
             const tour_id = req.body.tour_id
-            const order = await checkOrderByUser(user_id)
-            if (!order) return res.status(404).json({ message: "Not found order" })
+            const cart = await Cart.findOne({ where: { cart_id: cart_id }})
             const order_item = await OrderItem.findOne({
                 where: {
-                    user_id: user_id,
+                    cart_id: cart_id,
                     tour_id: tour_id
                 }
             })
             if (!order_item) return res.status(404).json({ message: "Not found order_item!" })
             
             // update total of order
-            order.total = parseFloat(order.total) - parseFloat(order_item.quantity * order_item.price);
-            await order.save()
+            cart.total = parseFloat(cart.total) - parseFloat(order_item.quantity * order_item.price);
+            await cart.save()
             
             await order_item.destroy()
             return res.status(200).json({ 
                 message: "Remove order_item from order successfully!",
-                cart: order
+                cart: cart
             })
         } catch (error) {
             return res.status(500).json({ message: error.message })

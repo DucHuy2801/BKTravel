@@ -10,6 +10,9 @@ const updateTotalCart = async (user_id, total_price) => {
     await cart.save();
 }
 
+const updateTotalPriceOrderItem = async (item_id, ) => {
+
+}
 module.exports = {
     updateTotalCart
 }
