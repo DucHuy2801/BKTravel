@@ -39,6 +39,10 @@ class CartController {
             const order_item = await OrderItem.findOne({
                 where: { cart_id: cart.cart_id, tour_id: tour_id }
             })
+
+            // console.log(`new_total:::`, parseFloat(adult_quantity * (tour.price)) + parseFloat(0.75 * child_quantity * (tour.price)))
+            // return res.status(200).json({ message: "OK"})
+            const total_price = parseFloat(adult_quantity * (tour.price)) + parseFloat(0.75 * child_quantity * (tour.price));
             let orderItem
             if (!order_item) {
                 orderItem = await OrderItem.create({
@@ -47,21 +51,25 @@ class CartController {
                     quantity: adult_quantity + child_quantity,
                     adult_quantity: adult_quantity,
                     child_quantity: child_quantity,
-                    cart_id: cart.cart_id
+                    cart_id: cart.cart_id,
+                    total_price: parseFloat(total_price)
                 })
             } else {
                 order_item.adult_quantity += adult_quantity,
                 order_item.child_quantity += child_quantity
                 order_item.quantity += (adult_quantity + child_quantity)
+                order_item.total_price = parseFloat(order_item.total_price) + parseFloat(total_price)
                 await order_item.save()
             }
+
+            // calculate total price of order item
+            const child_order = orderItem ? orderItem.child_quantity : order_item.child_quantity;
+            const adult_order = orderItem ? orderItem.adult_quantity : order_item.adult_quantity;
+            const new_total = parseFloat(adult_order * (tour.price)) + parseFloat(0.75 * child_order * (tour.price));
             
             // update total of cart
-            const child_order = orderItem ? orderItem.child_quantity : order_item.child_quantity;
-            const adult_order = orderItem ? orderItem.adult_quantity : order_item.adult_quantity
-            const new_total = parseFloat(adult_order * (tour.price)) + parseFloat(0.75 * child_order * (tour.price))
-            cart.total = new_total;
-            cart.amount_items = orderItem ? cart.amount_items : cart.amount_items++;
+            cart.total = parseFloat(cart.total) + parseFloat(new_total);
+            cart.amount_items = order_item ? cart.amount_items : cart.amount_items++;
             await cart.save()
 
             return res.status(200).json({
@@ -104,16 +112,20 @@ class CartController {
         try {
             const { user_id, tour_id } = req.body
             const cart = await checkCartByUser(user_id)
-    
-            console.log(`cart_id::`, cart.cart_id)
+
             const order_item = await findOrderItem(cart.cart_id, tour_id)
             if (!order_item) return res.status(404).json({ message: "Not found order_item!"})
+
+            const tour = await findTourById(tour_id)
+            if (!tour) return res.status(404).json({ message: "Not found tour for increment! "})
+            
             order_item.adult_quantity++;
             order_item.quantity++;
+            order_item.total_price = parseFloat(order_item.total_price) + parseFloat(tour.price)
             await order_item.save()
             
             const new_total = parseFloat(cart.total) + parseFloat(order_item.price)
-            cart.total = new_total;
+            cart.total = parseFloat(cart.total) + parseFloat(new_total);
             await cart.save()
 
             return res.status(200).json({ 
@@ -133,8 +145,13 @@ class CartController {
             const order_item = await findOrderItem(cart.cart_id, tour_id)
             if (!order_item) return res.status(404).json({ message: "Not found order_item!"})
 
+            const tour = await findTourById(tour_id)
+            if (!tour) return res.status(404).json({ message: "Not found tour for increment! "})
+
             order_item.adult_quantity--;
             order_item.quantity--;
+            order_item.total_price = parseFloat(order_item.total_price) - parseFloat(tour.price)
+
             await order_item.save()
 
             if (order_item.quantity == 0) {
@@ -162,8 +179,14 @@ class CartController {
     
             const order_item = await findOrderItem(cart.cart_id, tour_id)
             if (!order_item) return res.status(404).json({ message: "Not found order_item!"})
+
+            const tour = await findTourById(tour_id)
+            if (!tour) return res.status(404).json({ message: "Not found tour for increment! "})
+
             order_item.child_quantity++;
             order_item.quantity++;
+            order_item.total_price = parseFloat(order_item.total_price) + parseFloat(tour.price)
+
             await order_item.save()
             
             const new_total = parseFloat(cart.total) + parseFloat(0.75 * order_item.price)
@@ -186,8 +209,13 @@ class CartController {
     
             const order_item = await findOrderItem(cart.cart_id, tour_id)
             if (!order_item) return res.status(404).json({ message: "Not found order_item!"})
+
+            const tour = await findTourById(tour_id)
+            if (!tour) return res.status(404).json({ message: "Not found tour for increment! "})
+
             order_item.child_quantity--;
             order_item.quantity--;
+            order_item.total_price = parseFloat(order_item.total_price) - parseFloat(tour.price)
             await order_item.save()
 
             if (order_item.quantity == 0) {
@@ -222,6 +250,7 @@ class CartController {
                 }
             })
             if (!order_item) return res.status(404).json({ message: "Not found order_item!" })
+            
             // update total of order
             order.total = parseFloat(order.total) - parseFloat(order_item.quantity * order_item.price);
             await order.save()
