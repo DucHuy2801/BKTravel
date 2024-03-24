@@ -26,6 +26,11 @@ OrderItem.init({
     price: {
         type: DataTypes.FLOAT,
         allowNull: false
+    },
+    total_price: {
+        type: DataTypes.DECIMAL(20, 2),
+        allowNull: false,
+        defaultValue: 0
     }
 }, { sequelize, modelName: "order_item" })
 
