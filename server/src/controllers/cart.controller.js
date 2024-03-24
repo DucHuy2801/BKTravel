@@ -205,7 +205,7 @@ class CartController {
     decrementChildQuantityOrderItem = async (req, res, next) => {
         try {
             const { user_id, tour_id } = req.body
-            const cart = await checkOrderByUser(user_id)
+            const cart = await checkCartByUser(user_id)
     
             const order_item = await findOrderItem(cart.cart_id, tour_id)
             if (!order_item) return res.status(404).json({ message: "Not found order_item!"})
