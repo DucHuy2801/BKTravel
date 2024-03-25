@@ -10,6 +10,8 @@ const User = require('../models/user.model')
 const Order = require('../models/order.model');
 const { StatusOrder } = require('../common/status');
 const { updateTotalCart } = require('../services/cart.service');
+const Voucher = require('../models/voucher.model');
+const { findVoucherById } = require('../services/voucher.service');
 
 
 const tmnCode = process.env.vnp_TmnCode;
@@ -30,7 +32,7 @@ class PaymentController {
      */
     createPaymentUrl = async (req, res, next) => {
         try {
-            const user_id = req.body.user_id;
+            const { user_id, voucher_id} = req.body;
             const user = await User.findOne({ where: { user_id: user_id }})
             if (!user) return res.status(404).json({ message: "Not found user for payment!" })
 
@@ -80,7 +82,13 @@ class PaymentController {
         
             let amount = total_price;
             let bankCode = 'NCB';
-        
+
+            // apply voucher to order
+            const voucher = await findVoucherById(voucher_id)
+            if (!voucher) return res.status(404).json({ message: "Not found voucher for using!" })
+            amount = voucher.type == 'percentage' ? parseFloat((1 - voucher.value_discount) * amount)
+                    : parseFloat(amount) - voucher.value_discount
+            
             let vnpUrl = url;
             let currCode = 'VND';
             let vnp_Params = {};
