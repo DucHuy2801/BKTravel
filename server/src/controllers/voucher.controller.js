@@ -4,32 +4,40 @@ const Voucher = require("../models/voucher.model")
 const cloudinary = require("../utils/cloudinary")
 const Sequelize = require("sequelize")
 const Op = Sequelize.Op
+const cron = require("node-cron")
 
 class VoucherController {
 
     createVoucher = async (req, res, next) => {
-        const { code_voucher, type, value_discount, max_number,
-                min_order_value, start_date, expired_date, description, image 
-            } = req.body
+        try {
+            const { code_voucher, type, value_discount, max_number,
+                min_order_value, start_date, expired_date, description
+            } = req.fields
+    
+            const result = req.files.image.path
+            const link_image = await cloudinary.uploader.upload(result)
 
-        const result = req.files.image.path
-        const link_image = await cloudinary.uploader.upload(result)
+            const new_voucher = await Voucher.create({
+                code_voucher: code_voucher,
+                type: type,
+                value_discount: value_discount,
+                max_number: max_number,
+                min_order_value: min_order_value,
+                start_date: start_date,
+                expired_date: expired_date,
+                description: description,
+                remain_number: max_number,
+                is_active: true,
+                image: link_image.secure_url
+            })
 
-        const new_voucher = new Voucher({
-            code_voucher, type, value_discount, max_number,
-            min_order_value, start_date, expired_date, description, current_number: 0,
-            cover_image: link_image.secure_url
-        })
-
-        const savedVoucher = new_voucher.save().catch((error) => {
-            console.log(`error`, error)
-            return res.status(400).json({ Message: "Can't create voucher"})
-        })
-
-        return res.status(200).json({
-            message: "Create voucher successfully!",
-            data: savedVoucher
-        })
+            return res.status(200).json({
+                message: "Create voucher successfully!",
+                data: new_voucher
+            })
+        } catch (error) {
+            return res.status(500).json({ message: error.message })
+        }
     }
 
     getVoucher = async (req, res, next) => {
@@ -42,8 +50,9 @@ class VoucherController {
                 }
             })
             if (!voucher) return res.status(404).json({ Message: "Not found voucher!" })
+
             return res.status(200).json({ 
-                data: voucher_id
+                data: voucher
             })
         } catch (error) {
             return res.status(500).json({ message: error.message })
@@ -72,14 +81,14 @@ class VoucherController {
         const updated_voucher = req.body;
 
         const voucher = await Voucher.findOne({ where: { voucher_id }})
-        if (!voucher) return res.status(404).json({ Message: "Not found voucher"})
+        if (!voucher) return res.status(404).json({ message: "Not found voucher"})
 
         const result = await Voucher.update(updated_voucher, {
             where: { voucher_id }
         })
         if (!result) 
             return res.status(400).json({ Message: "Update fail!"})
-        return res.status(200).json({Message: "Update voucher successfully!"})
+        return res.status(200).json({ message: "Update voucher successfully!"})
     }
 
     deleteVoucher = async (req, res, next) => {
