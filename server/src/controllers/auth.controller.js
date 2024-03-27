@@ -8,13 +8,13 @@ const authService = require("../services/auth.service")
 const querystring = require("querystring")
 const { createAccessToken, createRefreshToken } = require("../services/auth.service")
 const passport = require("passport")
+const { BadRequestError } = require("../core/error.response")
 
 const redirectURI = "auth/google";
 
 class AuthController {
     register = async (req, res, next) => {
         const { firstname, lastname, email, password, confirm_password } = req.body
-        
 
         const alreadyExistUser = await User.findOne({ where: {email}})
         if (alreadyExistUser) 
@@ -54,6 +54,9 @@ class AuthController {
 
     login = async (req, res, next) => {
         const { email, password } = req.body;
+
+        if (!email) throw new BadRequestError("Missing email")
+        
         const foundUser = await findUserByEmail(email);
         if (!foundUser) {
             return res.status(400).json("Email doesn't exist!")
