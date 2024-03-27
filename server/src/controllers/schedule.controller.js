@@ -28,18 +28,18 @@ class ScheduleController {
                         if (!exist_attraction) {
                             exist_attraction = await OtherAttraction.create({
                                 name: detail.name,
-                                note: detail.note,
+                                note: detail.note || null,
                                 description: detail.description
                             })
                         }
                         else {
-                            exist_attraction.note = detail.note;
+                            exist_attraction.note = detail.note || null;
                             exist_attraction.description = detail.description;
                             await exist_attraction.save()
                         }
                     }
                     else {
-                        attraction.note = detail.note;
+                        attraction.note = detail.note || null;
                         attraction.description = detail.description;
                         await attraction.save()
                     }
